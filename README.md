@@ -1,4 +1,4 @@
-# human-format
+# human-format [![Build Status](https://travis-ci.org/julien-f/human-format.png?branch=master)](http://travis-ci.org/julien-f/human-format)
 
 > Converts a number to/from a human readable string: `1337` ↔ `1.34kB`
 
