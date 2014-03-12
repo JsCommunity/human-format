@@ -10,7 +10,7 @@
 		module.exports = factory();
 	} else {
 		// Browser globals (root is window)
-		root.returnExports = factory();
+		root.humanFormat = factory();
 	}
 }(this, function () {
 	'use strict';
