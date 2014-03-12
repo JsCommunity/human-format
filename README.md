@@ -1,6 +1,11 @@
-# human-format [![Build Status](https://travis-ci.org/julien-f/human-format.png?branch=master)](http://travis-ci.org/julien-f/human-format)
+# human-format
+
+[![Build Status](https://img.shields.io/travis/julien-f/human-format/master.svg)](http://travis-ci.org/julien-f/human-format)
+[![Dependency Status](https://david-dm.org/vatesfr/xo-web/status.svg?theme=shields.io)](https://david-dm.org/vatesfr/xo-web)
+[![devDependency Status](https://david-dm.org/vatesfr/xo-web/dev-status.svg?theme=shields.io)](https://david-dm.org/vatesfr/xo-web#info=devDependencies)
 
 > Converts a number to/from a human readable string: `1337` ↔ `1.34kB`
+
 
 ## Install
 
