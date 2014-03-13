@@ -1,0 +1,21 @@
+{
+  "name": "human-format",
+  "main": "index.js",
+  "version": "0.1.1",
+  "authors": [
+    "Julien Fontanet <julien.fontanet@isonoe.net>"
+  ],
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "license": "ISC",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
