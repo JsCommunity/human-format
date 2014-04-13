@@ -23,10 +23,11 @@
     "type": "git",
     "url": "http://github.com/julien-f/human-format"
   },
+  "bugs": "https://github.com/julien-f/human-format/issues",
   "author": "Julien Fontanet <julien.fontanet@isonoe.net> (http://julien.isonoe.net/)",
   "license": "ISC",
   "devDependencies": {
-    "chai": "^1.9.0",
-    "mocha": "^1.17.1"
+    "chai": "^1.9.1",
+    "mocha": "^1.18.2"
   }
 }

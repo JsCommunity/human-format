@@ -80,6 +80,8 @@
 
 	//==================================================================
 
+	// TODO: it should be easier to create non-consecutive prefixes
+	// (e.g. K/M/G and Ki/Mi/Gi).
 	var makePrefixes = function (prefixes, base, init) {
 		init || (init = 0);
 
@@ -125,6 +127,8 @@
 		};
 	};
 
+	// FIXME: it makes little sense to have fractional prefixes for an
+	// indivisible unit (byte).
 	var defaults = {
 		unit: 'B', // bytes.
 
@@ -170,10 +174,20 @@
 			return null;
 		}
 
+		// TODO: when no prefixes match, it should try an case insensitive
+		// match, unless `opt.caseSensitive` is enabled.
+		//
+		// TODO: the unit should be checked: it might be absent but it
+		// should not differ from the one expected.
+		//
+		// TODO: if multiple units are specified, at least must match and
+		// the returned value should be: { value: <value>, unit: matchedUnit }
 		var num = +matches[1];
 		var fac = prefixes.map[matches[2]];
 		if (isNaN(num) || !fac)
 		{
+			// FIXME: an exception should be thrown if the input cannot be
+			// parsed.
 			return null;
 		}
 

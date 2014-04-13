@@ -29,9 +29,11 @@ humanFormat(65536, { unit: 'm' });
 
 // Custom prefixes with custom bases can be used!
 humanFormat(3452466511216.64, {
-	unit: 'iB',
 	prefixes: humanFormat.makePrefixes(
-		',k,M,G,T,P'.split(','),
+		// Array of consecutive prefix.
+		',ki,Mi,Gi,Ti,Pi'.split(','),
+
+		// Base.
 		1024
 	)
 });
@@ -41,6 +43,17 @@ humanFormat(3452466511216.64, {
 humanFormat.parse('1.34kB');
 //=> 1372.16
 ```
+
+## Contributions
+
+Contributions are *very* welcomed, either on the documentation or on
+the code.
+
+You may:
+
+- report any [issue](https://github.com/julien-f/human-format/issues)
+  you've encountered;
+- fork and create a pull request.
 
 ## License
 
