@@ -17,6 +17,12 @@ Download [manually](https://github.com/julien-f/human-format/releases) or with p
 npm install --save human-format
 ```
 
+#### bower
+
+```
+bower install --save human-format
+```
+
 ## Example
 
 ```javascript
