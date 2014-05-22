@@ -15,7 +15,6 @@
     "size",
     "unit"
   ],
-  "main": "index.js",
   "scripts": {
     "test": "mocha index.spec.js"
   },
@@ -27,7 +26,7 @@
   "author": "Julien Fontanet <julien.fontanet@isonoe.net> (http://julien.isonoe.net/)",
   "license": "ISC",
   "devDependencies": {
-    "chai": "^1.9.1",
-    "mocha": "^1.18.2"
+    "chai": "^1.9.0",
+    "mocha": "^1.17.1"
   }
 }
