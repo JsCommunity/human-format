@@ -53,29 +53,22 @@
 	var findPrefix = function (list, value) {
 		/* jshint bitwise: false */
 
-		var current;
 		var low = 0;
-		var high = list.length;
+		var high = list.length - 1;
 
-		while (low < high)
-		{
-			var mid = (low + high) >> 1; // <=> Math.floor((low + high) / 2)
+		var mid, current;
+		while (low !== high) {
+			mid = (low + high + 1) >> 1;
 			current = list[mid][1];
-			if (current < value)
-			{
-				low = mid + 1;
-			}
-			else
-			{
-				high = mid;
+
+			if (current > value) {
+				high = mid - 1;
+			} else {
+				low = mid;
 			}
 		}
 
-		if (current === value)
-		{
-			return list[low];
-		}
-		return list[low && low - 1];
+		return list[low];
 	};
 
 	//==================================================================
