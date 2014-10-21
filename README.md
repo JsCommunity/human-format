@@ -45,6 +45,10 @@ humanFormat(3452466511216.64, {
 });
 //=> 3.14TiB
 
+// You can force a prefix to be used
+humanFormat(100, { unit: 'm', prefix: 'k' });
+//=> 0.1km
+
 // You can also parses a human readable string.
 humanFormat.parse('1.34kB');
 //=> 1372.16
