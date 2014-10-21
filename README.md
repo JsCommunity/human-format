@@ -45,9 +45,17 @@ humanFormat(3452466511216.64, {
 });
 //=> 3.14TiB
 
-// You can force a prefix to be used
+// You can force a prefix to be used.
 humanFormat(100, { unit: 'm', prefix: 'k' });
 //=> 0.1km
+
+// You can access the raw result.
+humanFormat.raw(100, { unit: 'm', prefix: 'k' });
+//=> {
+//   num: 0.09999999999999999, // Close value, not rounded.
+//   prefix: 'k',
+//   num: 'm',
+// }
 
 // You can also parses a human readable string.
 humanFormat.parse('1.34kB');
