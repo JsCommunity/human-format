@@ -71,7 +71,7 @@
 
 	// TODO: it should be easier to create non-consecutive prefixes
 	// (e.g. K/M/G and Ki/Mi/Gi).
-	function makePrefixes(prefixes, base, init) {
+	function humanFormat$makePrefixes(prefixes, base, init) {
 		init || (init = 0);
 
 		var list = []; // Lists prefixes and their factor in ascending order.
@@ -126,14 +126,14 @@
 		// Not all prefixes are present, only those which are multiple of
 		// 1e3, because humans usually prefer to see close numbers using
 		// the same unit to ease the comparison.
-		prefixes: makePrefixes(
+		prefixes: humanFormat$makePrefixes(
 			'y,z,a,f,p,n,µ,m,,k,M,G,T,P,E,Z,Y'.split(','),
 			1e3, // Base.
 			-8   // Exponent for the first value.
 		),
 	};
 
-	function humanFormatInfo(num, opts) {
+	function humanFormat$raw(num, opts) {
 		opts = mergeDefaults(opts || {}, defaults);
 
 		// Ensures `num` is a number (or NaN).
@@ -180,12 +180,12 @@
 	}
 
 	function humanFormat(num, opts){
-		var info = humanFormatInfo(num, opts);
+		var info = humanFormat$raw(num, opts);
 		return info.num + info.prefix +  info.unit;
 	}
 
-	humanFormat.humanFormatInfo = humanFormatInfo;
-	humanFormat.makePrefixes = makePrefixes;
+	humanFormat.raw = humanFormat$raw;
+	humanFormat.makePrefixes = humanFormat$makePrefixes;
 	humanFormat.parse = function humanFormat$parse(str, opts) {
 		var prefixes = mergeDefaults(opts || {}, defaults).prefixes;
 
