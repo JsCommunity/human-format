@@ -73,6 +73,10 @@ You may:
   you've encountered;
 - fork and create a pull request.
 
+Contributors:
+
+- @sweetpi
+
 ## License
 
 ISC © [Julien Fontanet](http://julien.isonoe.net)
