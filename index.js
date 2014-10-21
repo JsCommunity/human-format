@@ -137,7 +137,7 @@
 		),
 	};
 
-	var humanFormat = function (num, opts) {
+	var humanFormatInfo = function (num, opts) {
 		opts = mergeDefaults(opts || {}, defaults);
 
 		// Ensures `num` is a number (or NaN).
@@ -155,8 +155,18 @@
 		// 2 decimals.
 		num = Math.round(num * 1e2 / prefix[1]) / 1e2;
 
-		return num + prefix[0] + opts.unit;
+		return {
+			num: num,
+			prefix: prefix[0],
+			unit: opts.unit
+		};
 	};
+	var humanFormat = function(num, opts){
+		var info = humanFormatInfo(num, opts);
+		return info.num + info.prefix +  info.unit;
+	};
+
+	humanFormatInfo = humanFormatInfo;
 	humanFormat.makePrefixes = makePrefixes;
 	humanFormat.parse = function (str, opts) {
 		var prefixes = mergeDefaults(opts || {}, defaults).prefixes;
