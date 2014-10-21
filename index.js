@@ -43,6 +43,15 @@
 		};
 	})(Object.prototype.hasOwnProperty);
 
+	function round(f, n) {
+		if (!n) {
+			return Math.round(f);
+		}
+
+		var p = Math.pow(10, n);
+		return Math.round(f * p) / p;
+	}
+
 	//==================================================================
 
 	// Binary search to find the greatest index which has a value <=.
@@ -170,7 +179,7 @@
 
 		// Rebases the number using the current prefix and rounds it with
 		// 2 decimals.
-		num = Math.round(num * 1e2 / prefix[1]) / 1e2;
+		num /= prefix[1];
 
 		return {
 			num: num,
@@ -181,7 +190,7 @@
 
 	function humanFormat(num, opts){
 		var info = humanFormat$raw(num, opts);
-		return info.num + info.prefix +  info.unit;
+		return round(info.num, 2) + info.prefix +  info.unit;
 	}
 
 	humanFormat.raw = humanFormat$raw;
