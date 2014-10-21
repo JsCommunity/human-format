@@ -1,6 +1,6 @@
 {
   "name": "human-format",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Converts a number to/from a human readable string: `1337` ↔ `1.34kB`",
   "keywords": [
     "byte",
