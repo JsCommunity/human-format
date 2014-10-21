@@ -149,7 +149,24 @@
 			return '0'+ opts.unit;
 		}
 
-		var prefix = findPrefix(opts.prefixes.list, num);
+		var prefix;
+		// if a prefix is given use that prefix
+		if(opts.prefix) {
+			var factor = opts.factor;
+			// if no factor is given then look it up
+			if(factor === undefined) {
+				factor = opts.prefixes.map[opts.prefix];
+			}
+			// if we found a factor use it
+			if(factor !== undefined) {
+				prefix = [opts.prefix, factor];
+			}
+		}
+
+		// if no prefix was provided search for the best prefix
+		if(!prefix) {
+			prefix = findPrefix(opts.prefixes.list, num);
+		}
 
 		// Rebases the number using the current prefix and rounds it with
 		// 2 decimals.
