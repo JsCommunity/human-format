@@ -18,39 +18,35 @@
 	//==================================================================
 
 	// https://www.npmjs.org/package/escape-regexp
-	var escapeRegexp = function (str) {
+	function escapeRegexp(str) {
 		return str.replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
-	};
+	}
 
-	var isArray = (function () {
-		var toString = Object.prototype.toString;
-		toString = toString.call.bind(toString);
-		var tag = toString([]);
-		return function (value) {
-			return (toString(value) === tag);
+	var isArray = (function (toString) {
+		var tag = toString.call([]);
+		return function isArray(value) {
+			return (toString.call(value) === tag);
 		};
-	})();
+	})(Object.prototype.toString);
 
-	var mergeDefaults = (function () {
-		var has = Object.prototype.hasOwnProperty;
-		has = has.call.bind(has);
-		return function (opts, defs) {
+	var mergeDefaults = (function (has) {
+		return function mergeDefaults(opts, defs) {
 			var key;
 			for (key in defs)
 			{
-				if (has(defs, key) && (opts[key] === undefined))
+				if (has.call(defs, key) && (opts[key] === undefined))
 				{
 					opts[key] = defs[key];
 				}
 			}
 			return opts;
 		};
-	})();
+	})(Object.prototype.hasOwnProperty);
 
 	//==================================================================
 
 	// Binary search to find the greatest index which has a value <=.
-	var findPrefix = function (list, value) {
+	function findPrefix(list, value) {
 		/* jshint bitwise: false */
 
 		var low = 0;
@@ -69,13 +65,13 @@
 		}
 
 		return list[low];
-	};
+	}
 
 	//==================================================================
 
 	// TODO: it should be easier to create non-consecutive prefixes
 	// (e.g. K/M/G and Ki/Mi/Gi).
-	var makePrefixes = function (prefixes, base, init) {
+	function makePrefixes(prefixes, base, init) {
 		init || (init = 0);
 
 		var list = []; // Lists prefixes and their factor in ascending order.
@@ -118,7 +114,7 @@
 			map: map,
 			re: re,
 		};
-	};
+	}
 
 	// FIXME: it makes little sense to have fractional prefixes for an
 	// indivisible unit (byte).
@@ -137,7 +133,7 @@
 		),
 	};
 
-	var humanFormatInfo = function (num, opts) {
+	function humanFormatInfo(num, opts) {
 		opts = mergeDefaults(opts || {}, defaults);
 
 		// Ensures `num` is a number (or NaN).
@@ -181,15 +177,16 @@
 			prefix: prefix[0],
 			unit: opts.unit
 		};
-	};
-	var humanFormat = function(num, opts){
+	}
+
+	function humanFormat(num, opts){
 		var info = humanFormatInfo(num, opts);
 		return info.num + info.prefix +  info.unit;
-	};
+	}
 
 	humanFormat.humanFormatInfo = humanFormatInfo;
 	humanFormat.makePrefixes = makePrefixes;
-	humanFormat.parse = function (str, opts) {
+	humanFormat.parse = function humanFormat$parse(str, opts) {
 		var prefixes = mergeDefaults(opts || {}, defaults).prefixes;
 
 		var matches = prefixes.re.exec(str);
