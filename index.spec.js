@@ -55,6 +55,12 @@ describe('humanFormat()', function () {
 		);
 		expect(humanFormat(102400, { prefixes: prefixes })).to.equal('100kiB');
 	});
+
+	it('can force a prefix', function () {
+		expect(humanFormat(100, { unit: 'm', prefix: 'k' })).to.equal('0.1km');
+	});
+
+
 });
 
 describe('humanFormat.parse()', function () {

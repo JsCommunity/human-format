@@ -137,7 +137,7 @@
 		),
 	};
 
-	var humanFormat = function (num, opts) {
+	var humanFormatInfo = function (num, opts) {
 		opts = mergeDefaults(opts || {}, defaults);
 
 		// Ensures `num` is a number (or NaN).
@@ -146,17 +146,48 @@
 		// If `num` is 0 or NaN.
 		if (!num)
 		{
-			return '0'+ opts.unit;
+			return {
+				num: 0,
+				prefix: '',
+				unit: opts.unit
+			};
 		}
 
-		var prefix = findPrefix(opts.prefixes.list, num);
+		var prefix;
+		// if a prefix is given use that prefix
+		if(opts.prefix) {
+			var factor = opts.factor;
+			// if no factor is given then look it up
+			if(factor === undefined) {
+				factor = opts.prefixes.map[opts.prefix];
+			}
+			// if we found a factor use it
+			if(factor !== undefined) {
+				prefix = [opts.prefix, factor];
+			}
+		}
+
+		// if no prefix was provided search for the best prefix
+		if(!prefix) {
+			prefix = findPrefix(opts.prefixes.list, num);
+		}
 
 		// Rebases the number using the current prefix and rounds it with
 		// 2 decimals.
 		num = Math.round(num * 1e2 / prefix[1]) / 1e2;
 
-		return num + prefix[0] + opts.unit;
+		return {
+			num: num,
+			prefix: prefix[0],
+			unit: opts.unit
+		};
 	};
+	var humanFormat = function(num, opts){
+		var info = humanFormatInfo(num, opts);
+		return info.num + info.prefix +  info.unit;
+	};
+
+	humanFormat.humanFormatInfo = humanFormatInfo;
 	humanFormat.makePrefixes = makePrefixes;
 	humanFormat.parse = function (str, opts) {
 		var prefixes = mergeDefaults(opts || {}, defaults).prefixes;
