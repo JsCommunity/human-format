@@ -146,7 +146,11 @@
 		// If `num` is 0 or NaN.
 		if (!num)
 		{
-			return '0'+ opts.unit;
+			return {
+				num: 0,
+				prefix: '',
+				unit: opts.unit
+			};
 		}
 
 		var prefix;
@@ -183,7 +187,7 @@
 		return info.num + info.prefix +  info.unit;
 	};
 
-	humanFormatInfo = humanFormatInfo;
+	humanFormat.humanFormatInfo = humanFormatInfo;
 	humanFormat.makePrefixes = makePrefixes;
 	humanFormat.parse = function (str, opts) {
 		var prefixes = mergeDefaults(opts || {}, defaults).prefixes;
