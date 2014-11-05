@@ -17,31 +17,84 @@
 
 	//==================================================================
 
+	function assignBase(dst, src) {
+		var prop;
+		for (prop in src) {
+			if (has(src, prop)) {
+				dst[prop] = src[prop];
+			}
+		}
+	}
+	function assign(dst, src) {
+		var i, n;
+		for (i = 0, n = arguments.length; i < n; ++i) {
+			src = arguments[i];
+			if (src) {
+				assignBase(dst, src);
+			}
+		}
+		return dst;
+	}
+
+	function compareLongestFirst(a, b) {
+		return b.length - a.length;
+	}
+
+	function compareSmallestFactorFirst(a, b) {
+		return a.factor - b.factor;
+	}
+
 	// https://www.npmjs.org/package/escape-regexp
 	function escapeRegexp(str) {
 		return str.replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
 	}
 
-	var isArray = (function (toString) {
-		var tag = toString.call([]);
-		return function isArray(value) {
-			return (toString.call(value) === tag);
+	function forEach(arr, iterator) {
+		var i, n;
+		for (i = 0, n = arr.length; i < n; ++i) {
+			iterator(arr[i], i);
+		}
+	}
+
+	function forOwn(obj, iterator) {
+		var prop;
+		for (prop in obj) {
+			if (has(obj, prop)) {
+				iterator(obj[prop], prop);
+			}
+		}
+	}
+
+	var has = (function (hasOwnProperty) {
+		return function has(obj, prop) {
+			return obj && hasOwnProperty.call(obj, prop);
+		};
+	})(Object.prototype.hasOwnProperty);
+
+	var toString = (function (toString_) {
+		return function toString(val) {
+			return toString_.call(val);
 		};
 	})(Object.prototype.toString);
 
-	var mergeDefaults = (function (has) {
-		return function mergeDefaults(opts, defs) {
-			var key;
-			for (key in defs)
-			{
-				if (has.call(defs, key) && (opts[key] === undefined))
-				{
-					opts[key] = defs[key];
-				}
-			}
-			return opts;
+	var isNumber = (function (tag) {
+		return function isNumber(value) {
+			return (value === value) && (toString(value) === tag);
 		};
-	})(Object.prototype.hasOwnProperty);
+	})(toString(0));
+
+	var isString = (function (tag) {
+		return function isString(value) {
+			return (toString(value) === tag);
+		};
+	})(toString(''));
+
+	function resolve(container, entry) {
+		while (isString(entry)) {
+			entry = container[entry];
+		}
+		return entry;
+	}
 
 	function round(f, n) {
 		if (!n) {
@@ -54,17 +107,53 @@
 
 	//==================================================================
 
+	function Scale(prefixes) {
+		this._prefixes = prefixes;
+
+		var escapedPrefixes = [];
+		var list = [];
+		forOwn(prefixes, function (factor, prefix) {
+			escapedPrefixes.push(escapeRegexp(prefix));
+
+			list.push({
+				factor: factor,
+				prefix: prefix
+			});
+		});
+
+		list.sort(compareSmallestFactorFirst);
+		this._list = list;
+
+		escapedPrefixes.sort(compareLongestFirst);
+		this._regexp = new RegExp(
+			'^\\s*(\\d+(?:\\.\\d+)?)\\s*('+ escapedPrefixes.join('|') +')\s*(.*)\s*?$',
+			'i'
+		);
+	}
+
+	Scale.create = function Scale$create(prefixesList, base, initExp) {
+		var prefixes = {};
+		var factor = initExp ? Math.pow(base, initExp) : 1;
+		forEach(prefixesList, function (prefix, i) {
+			prefixes[prefix] = Math.pow(base, i + (initExp || 0));
+			factor *= base;
+		});
+
+		return new Scale(prefixes);
+	};
+
 	// Binary search to find the greatest index which has a value <=.
-	function findPrefix(list, value) {
+	Scale.prototype.findPrefix = function Scale$findPrefix(value) {
 		/* jshint bitwise: false */
 
+		var list = this._list;
 		var low = 0;
 		var high = list.length - 1;
 
 		var mid, current;
 		while (low !== high) {
 			mid = (low + high + 1) >> 1;
-			current = list[mid][1];
+			current = list[mid].factor;
 
 			if (current > value) {
 				high = mid - 1;
@@ -74,155 +163,154 @@
 		}
 
 		return list[low];
-	}
-
-	//==================================================================
-
-	// TODO: it should be easier to create non-consecutive prefixes
-	// (e.g. K/M/G and Ki/Mi/Gi).
-	function humanFormat$makePrefixes(prefixes, base, init) {
-		init || (init = 0);
-
-		var list = []; // Lists prefixes and their factor in ascending order.
-		var map = {};  // Maps from prefixes to their factor.
-		var re;        // Regex to parse a value and its associated unit.
-
-		var tmp = [];
-
-		prefixes.forEach(function (prefix, i) {
-			var name, value;
-			if (isArray(prefix))
-			{
-				name = prefix[0];
-				value = prefix[1];
-			}
-			else
-			{
-				name = prefix;
-				value = Math.pow(base, i + init);
-				prefix = [name, value];
-			}
-			list.push(prefix);
-
-			map[name] = value;
-
-			tmp.push(escapeRegexp(name));
-		});
-
-		list.sort(function (a, b) {
-			return (a[1] - b[1]);
-		});
-
-		tmp = tmp.sort(function (a, b) {
-			return b.length - a.length; // Matches longest first.
-		}).join('|');
-		re = new RegExp('^\\s*(\\d+(?:\\.\\d+)?)\\s*('+ tmp +').*?$', 'i');
-
-		return {
-			list: list,
-			map: map,
-			re: re,
-		};
-	}
-
-	// FIXME: it makes little sense to have fractional prefixes for an
-	// indivisible unit (byte).
-	var defaults = {
-		unit: 'B', // bytes.
-
-		// SI prefixes (https://en.wikipedia.org/wiki/Metric_prefix).
-		//
-		// Not all prefixes are present, only those which are multiple of
-		// 1e3, because humans usually prefer to see close numbers using
-		// the same unit to ease the comparison.
-		prefixes: humanFormat$makePrefixes(
-			'y,z,a,f,p,n,µ,m,,k,M,G,T,P,E,Z,Y'.split(','),
-			1e3, // Base.
-			-8   // Exponent for the first value.
-		),
 	};
 
-	function humanFormat$raw(num, opts) {
-		opts = mergeDefaults(opts || {}, defaults);
+	Scale.prototype.parse = function Scale$parse(str, strict) {
+		var matches = str.match(this._regexp);
 
-		// Ensures `num` is a number (or NaN).
-		num = +num;
-
-		// If `num` is 0 or NaN.
-		if (!num)
-		{
-			return {
-				num: 0,
-				prefix: '',
-				unit: opts.unit
-			};
-		}
-
-		var prefix;
-		// if a prefix is given use that prefix
-		if(opts.prefix) {
-			var factor = opts.factor;
-			// if no factor is given then look it up
-			if(factor === undefined) {
-				factor = opts.prefixes.map[opts.prefix];
-			}
-			// if we found a factor use it
-			if(factor !== undefined) {
-				prefix = [opts.prefix, factor];
-			}
-		}
-
-		// if no prefix was provided search for the best prefix
-		if(!prefix) {
-			prefix = findPrefix(opts.prefixes.list, num);
-		}
-
-		// Rebases the number using the current prefix and rounds it with
-		// 2 decimals.
-		num /= prefix[1];
-
-		return {
-			num: num,
-			prefix: prefix[0],
-			unit: opts.unit
-		};
-	}
-
-	function humanFormat(num, opts){
-		var info = humanFormat$raw(num, opts);
-		return round(info.num, 2) + info.prefix +  info.unit;
-	}
-
-	humanFormat.raw = humanFormat$raw;
-	humanFormat.makePrefixes = humanFormat$makePrefixes;
-	humanFormat.parse = function humanFormat$parse(str, opts) {
-		var prefixes = mergeDefaults(opts || {}, defaults).prefixes;
-
-		var matches = prefixes.re.exec(str);
-		if (!matches)
-		{
+		if (!matches) {
 			return null;
 		}
 
-		// TODO: when no prefixes match, it should try an case insensitive
-		// match, unless `opt.caseSensitive` is enabled.
+		var prefix = matches[2];
+
+		if (!has(this._prefixes, prefix)) {
+			if (strict) {
+				return null;
+			}
+
+			// FIXME
+			return null;
+		}
+
+		return {
+			factor: this._prefixes[prefix],
+			prefix: prefix,
+			suffix: matches[3],
+			value: +matches[1]
+		};
+	};
+
+	//==================================================================
+
+	var scales = {
+		// https://en.wikipedia.org/wiki/Binary_prefix
+		binary: Scale.create(
+			',ki,Mi,Gi,Ti,Pi,Ei,Zi,Yi'.split(','),
+			1024
+		),
+
+		// https://en.wikipedia.org/wiki/Metric_prefix
 		//
+		// Not all prefixes are present, only those which are multiple of
+		// 1000, because humans usually prefer to see close numbers using
+		// the same unit to ease the comparison.
+		SI: Scale.create(
+			'y,z,a,f,p,n,µ,m,,k,M,G,T,P,E,Z,Y'.split(','),
+			1000, -8
+		),
+	};
+
+	var defaults = {
+		scale: 'SI',
+
+		// Strict mode prevents parsing of incorrectly cased prefixes.
+		strict: false,
+
+		// Unit to use for formatting.
+		unit: 'B',
+	};
+
+	function humanFormat(value, opts){
+		opts = assign({}, defaults, opts);
+
+		var info = humanFormat$raw(value, opts);
+		return round(info.value, 2) + info.prefix + (opts.unit || '');
+	}
+
+	function humanFormat$parse(str, opts) {
+		var info = humanFormat$parse$raw(str, opts);
+
+		return info.value * info.factor;
+	}
+
+	function humanFormat$parse$raw(str, opts) {
+		if (!isString(str)) {
+			throw new TypeError('str must be a string');
+		}
+
+		// Merge default options.
+		opts = assign({}, defaults, opts);
+
+		// Get current scale.
+		var scale = resolve(scales, opts.scale);
+		if (!scale) {
+			throw new Error('missing scale');
+		}
+
 		// TODO: the unit should be checked: it might be absent but it
 		// should not differ from the one expected.
 		//
 		// TODO: if multiple units are specified, at least must match and
 		// the returned value should be: { value: <value>, unit: matchedUnit }
-		var num = +matches[1];
-		var fac = prefixes.map[matches[2]];
-		if (isNaN(num) || !fac)
-		{
-			// FIXME: an exception should be thrown if the input cannot be
-			// parsed.
-			return null;
+
+		var info = scale.parse(str, opts.strict);
+		if (!info) {
+			throw new Error('cannot parse str');
 		}
 
-		return (num * fac);
-	};
+		return info;
+	}
+
+	function humanFormat$raw(value, opts) {
+		// Zero is a special case, it never has any prefix.
+		if (value === 0) {
+			return {
+				value: 0,
+				prefix: ''
+			};
+		}
+
+		if (!isNumber(value)) {
+			throw new TypeError('value must be a number');
+		}
+
+		// Merge default options.
+		opts = assign({}, defaults, opts);
+
+		// Get current scale.
+		var scale = resolve(scales, opts.scale);
+		if (!scale) {
+			throw new Error('missing scale');
+		}
+
+		var prefix = opts.prefix;
+		var factor;
+		if (prefix) {
+			if (!has(scale._prefixes, prefix)) {
+				throw new Error('invalid prefix');
+			}
+
+			factor = scale._prefixes[prefix];
+		} else {
+			var _ref = scale.findPrefix(value);
+			prefix = _ref.prefix;
+			factor = _ref.factor;
+		}
+
+		// Rebase using current factor.
+		value /= factor;
+
+		return {
+			value: value,
+			prefix: prefix,
+		};
+	}
+
+	humanFormat.parse = humanFormat$parse;
+	humanFormat$parse.raw = humanFormat$parse$raw;
+	humanFormat.raw = humanFormat$raw;
+	humanFormat.Scale = Scale;
 
 	return humanFormat;
 }));
