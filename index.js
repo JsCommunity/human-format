@@ -126,7 +126,9 @@
 
 		escapedPrefixes.sort(compareLongestFirst);
 		this._regexp = new RegExp(
-			'^\\s*(\\d+(?:\\.\\d+)?)\\s*('+ escapedPrefixes.join('|') +')\s*(.*)\s*?$',
+			'^\\s*(\\d+(?:\\.\\d+)?)\\s*(' +
+				escapedPrefixes.join('|') +
+				')\\s*(.*)\\s*?$',
 			'i'
 		);
 	}
@@ -186,7 +188,7 @@
 		return {
 			factor: this._prefixes[prefix],
 			prefix: prefix,
-			suffix: matches[3],
+			unit: matches[3],
 			value: +matches[1]
 		};
 	};
@@ -208,7 +210,7 @@
 		SI: Scale.create(
 			'y,z,a,f,p,n,µ,m,,k,M,G,T,P,E,Z,Y'.split(','),
 			1000, -8
-		),
+		)
 	};
 
 	var defaults = {
@@ -218,14 +220,15 @@
 		strict: false,
 
 		// Unit to use for formatting.
-		unit: 'B',
+		unit: ''
 	};
 
 	function humanFormat(value, opts){
 		opts = assign({}, defaults, opts);
 
 		var info = humanFormat$raw(value, opts);
-		return round(info.value, 2) + info.prefix + (opts.unit || '');
+		var suffix = info.prefix + opts.unit;
+		return round(info.value, 2) + (suffix ? ' ' + suffix : '');
 	}
 
 	function humanFormat$parse(str, opts) {
@@ -302,8 +305,8 @@
 		value /= factor;
 
 		return {
-			value: value,
 			prefix: prefix,
+			value: value
 		};
 	}
 
