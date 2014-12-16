@@ -46,7 +46,7 @@ var timeScale = new humanFormat.Scale({
 	days: 86400,
 	months: 2592000,
 });
-humanFormat(26729235, { scale: time });
+humanFormat(26729235, { scale: timeScale });
 //=> 10.31 months
 
 // You can force a prefix to be used.

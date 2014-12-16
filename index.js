@@ -77,6 +77,11 @@
 		};
 	})(Object.prototype.toString);
 
+	function isDefined(val) {
+		/* jshint eqnull:true */
+		return val != null;
+	}
+
 	var isNumber = (function (tag) {
 		return function isNumber(value) {
 			return (value === value) && (toString(value) === tag);
@@ -289,7 +294,7 @@
 
 		var prefix = opts.prefix;
 		var factor;
-		if (prefix) {
+		if (isDefined(prefix)) {
 			if (!has(scale._prefixes, prefix)) {
 				throw new Error('invalid prefix');
 			}
