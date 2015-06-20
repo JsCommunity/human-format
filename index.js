@@ -228,7 +228,7 @@
 		unit: '',
 
 		// Decimal digits for formatting.
-		decimalDigits: 2
+		decimals: 2
 	};
 
 	function humanFormat(value, opts){
@@ -236,7 +236,7 @@
 
 		var info = humanFormat$raw(value, opts);
 		var suffix = info.prefix + opts.unit;
-		return round(info.value, opts.decimalDigits) + (suffix ? ' ' + suffix : '');
+		return round(info.value, opts.decimals) + (suffix ? ' ' + suffix : '');
 	}
 
 	function humanFormat$parse(str, opts) {
