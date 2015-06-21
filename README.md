@@ -97,6 +97,7 @@ You may:
 Contributors:
 
 - @sweetpi
+- @Itay289
 
 ## License
 
