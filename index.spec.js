@@ -81,7 +81,7 @@ describe('humanFormat()', function () {
 
 	context('with decimalDigits opts', function() {
 		it('should return decimal digit as given', function () {
-			expect(humanFormat(2358, {decimalDigits: 1, prefix: 'k' })).to.equal('2.4 k');
+			expect(humanFormat(2358, {decimals: 1, prefix: 'k' })).to.equal('2.4 k');
 		});	
 	});
 
