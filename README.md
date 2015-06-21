@@ -31,6 +31,12 @@ bower install --save human-format
 humanFormat(1337);
 //=> '1.34k'
 
+// The number of decimals can be changed.
+humanFormat(1337, {
+  decimals: 1
+});
+//=> '1.3k'
+
 // Units and scales can be specified.
 humanFormat(65536, {
 	scale: 'binary',
