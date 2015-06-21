@@ -28,20 +28,20 @@ bower install --save human-format
 ### Formatting
 
 ```javascript
-humanFormat(1337);
+humanFormat(1337)
 //=> '1.34k'
 
 // The number of decimals can be changed.
 humanFormat(1337, {
   decimals: 1
-});
+})
 //=> '1.3k'
 
 // Units and scales can be specified.
 humanFormat(65536, {
 	scale: 'binary',
 	unit: 'B'
-});
+})
 //=> 64 kiB
 
 // Custom scales can be created!
@@ -51,16 +51,16 @@ var timeScale = new humanFormat.Scale({
 	hours: 3600,
 	days: 86400,
 	months: 2592000,
-});
-humanFormat(26729235, { scale: timeScale });
+})
+humanFormat(26729235, { scale: timeScale })
 //=> 10.31 months
 
 // You can force a prefix to be used.
-humanFormat(100, { unit: 'm', prefix: 'k' });
+humanFormat(100, { unit: 'm', prefix: 'k' })
 //=> 0.1 km
 
 // You can access the raw result.
-humanFormat.raw(100, { prefix: 'k' });
+humanFormat.raw(100, { prefix: 'k' })
 //=> {
 //   prefix: 'k',
 //   value: 0.09999999999999999 // Close value, not rounded.
@@ -70,11 +70,11 @@ humanFormat.raw(100, { prefix: 'k' });
 ### Parsing
 
 ```javascript
-humanFormat.parse('1.34 kiB', { scale: 'binary' });
+humanFormat.parse('1.34 kiB', { scale: 'binary' })
 //=> 1372.16
 
 // You can access the raw result.
-humanFormat.parse.raw('1.34 kB');
+humanFormat.parse.raw('1.34 kB')
 //=> {
 //  factor: 1000,
 //  prefix: 'k',
