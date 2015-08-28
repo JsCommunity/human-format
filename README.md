@@ -29,13 +29,13 @@ bower install --save human-format
 
 ```javascript
 humanFormat(1337)
-//=> '1.34k'
+//=> '1.34 k'
 
 // The number of decimals can be changed.
 humanFormat(1337, {
   decimals: 1
 })
-//=> '1.3k'
+//=> '1.3 k'
 
 // Units and scales can be specified.
 humanFormat(65536, {
@@ -43,6 +43,12 @@ humanFormat(65536, {
 	unit: 'B'
 })
 //=> 64 kiB
+
+// A custom seperator can be specified.
+humanFormat(1337, {
+  seperator: ' - '
+})
+//=> 1.34 - k
 
 // Custom scales can be created!
 var timeScale = new humanFormat.Scale({
