@@ -104,6 +104,7 @@ Contributors:
 
 - @sweetpi
 - @Itay289
+- @qrohlf
 
 ## License
 
