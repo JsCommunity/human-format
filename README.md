@@ -52,7 +52,7 @@ humanFormat(1337, {
 
 // Custom scales can be created!
 var timeScale = new humanFormat.Scale({
-	seconds: 0,
+	seconds: 1,
 	minutes: 60,
 	hours: 3600,
 	days: 86400,
