@@ -90,7 +90,6 @@ describe('humanFormat()', function () {
       expect(humanFormat(2358, { decimals: 1, prefix: 'k' })).to.equal('2.4 k')
     })
   })
-
 })
 
 describe('humanFormat.parse()', function () {
