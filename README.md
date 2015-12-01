@@ -102,9 +102,10 @@ You may:
 
 Contributors:
 
-- @sweetpi
-- @Itay289
+- @djulien
 - @qrohlf
+- @Itay289
+- @sweetpi
 
 ## License
 
