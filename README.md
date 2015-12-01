@@ -39,8 +39,8 @@ humanFormat(1337, {
 
 // Units and scales can be specified.
 humanFormat(65536, {
-	scale: 'binary',
-	unit: 'B'
+  scale: 'binary',
+  unit: 'B'
 })
 //=> 64 kiB
 
@@ -52,11 +52,11 @@ humanFormat(1337, {
 
 // Custom scales can be created!
 var timeScale = new humanFormat.Scale({
-	seconds: 1,
-	minutes: 60,
-	hours: 3600,
-	days: 86400,
-	months: 2592000,
+  seconds: 1,
+  minutes: 60,
+  hours: 3600,
+  days: 86400,
+  months: 2592000,
 })
 humanFormat(26729235, { scale: timeScale })
 //=> 10.31 months
