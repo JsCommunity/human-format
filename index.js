@@ -225,7 +225,10 @@
 		strict: false,
 
 		// Unit to use for formatting.
-		unit: ''
+		unit: '', 
+
+		// Default decimals if not specified.
+		decimals: 2
 	};
 
 	function humanFormat(value, opts){
