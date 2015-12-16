@@ -127,6 +127,15 @@
       })
     })
 
+    // Adds lower cased prefixes for case insensitive fallback.
+    var lcPrefixes = this._lcPrefixes = {}
+    forOwn(prefixes, function (factor, prefix) {
+      var lcPrefix = prefix.toLowerCase()
+      if (!has(prefixes, lcPrefix)) {
+        lcPrefixes[lcPrefix] = prefix
+      }
+    })
+
     list.sort(compareSmallestFactorFirst)
     this._list = list
 
@@ -181,18 +190,22 @@
     }
 
     var prefix = matches[2]
+    var factor
 
-    if (!has(this._prefixes, prefix)) {
-      if (strict) {
-        return null
-      }
-
-      // FIXME
+    if (has(this._prefixes, prefix)) {
+      factor = this._prefixes[prefix]
+    } else if (
+      !strict &&
+      (prefix = prefix.toLowerCase(), has(this._lcPrefixes, prefix))
+    ) {
+      prefix = this._lcPrefixes[prefix]
+      factor = this._prefixes[prefix]
+    } else {
       return null
     }
 
     return {
-      factor: this._prefixes[prefix],
+      factor: factor,
       prefix: prefix,
       unit: matches[3],
       value: +matches[1]

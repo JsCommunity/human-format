@@ -101,4 +101,8 @@ describe('humanFormat.parse()', function () {
     // compareRaw(parse.raw(datum[1]), datum[2])
     })
   })
+
+  it('handle as gracefully as possible incorrect case', function () {
+    expect(parse('1g')).to.be.equal(1e9)
+  })
 })

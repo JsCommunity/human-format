@@ -79,6 +79,10 @@ humanFormat.raw(100, { prefix: 'k' })
 humanFormat.parse('1.34 kiB', { scale: 'binary' })
 //=> 1372.16
 
+// Fallbacks when possible if the prefix is incorrectly cased.
+humanFormat.parse('1 g')
+// => 1000000000
+
 // You can access the raw result.
 humanFormat.parse.raw('1.34 kB')
 //=> {
