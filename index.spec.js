@@ -60,8 +60,8 @@ describe('humanFormat()', function () {
     expect(humanFormat(0, { unit: 'g' })).to.equal('0 g')
   })
 
-  it('can use custom seperators', function () {
-    expect(humanFormat(1337, {seperator: ' - '})).to.equal('1.34 - k')
+  it('can use custom separators', function () {
+    expect(humanFormat(1337, {separator: ' - '})).to.equal('1.34 - k')
   })
 
   it('can use custom scale', function () {

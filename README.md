@@ -44,9 +44,9 @@ humanFormat(65536, {
 })
 //=> 64 kiB
 
-// A custom seperator can be specified.
+// A custom separator can be specified.
 humanFormat(1337, {
-  seperator: ' - '
+  separator: ' - '
 })
 //=> 1.34 - k
 

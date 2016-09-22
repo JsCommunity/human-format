@@ -244,8 +244,8 @@
     // Decimal digits for formatting.
     decimals: 2,
 
-    // Seperator to use between value and units
-    seperator: ' '
+    // separator to use between value and units
+    separator: ' '
   }
 
   function humanFormat (value, opts) {
@@ -253,7 +253,7 @@
 
     var info = humanFormat$raw(value, opts)
     var suffix = info.prefix + opts.unit
-    return round(info.value, opts.decimals) + (suffix ? opts.seperator + suffix : '')
+    return round(info.value, opts.decimals) + (suffix ? opts.separator + suffix : '')
   }
 
   function humanFormat$parse (str, opts) {
