@@ -150,10 +150,8 @@
 
   Scale.create = function Scale$create (prefixesList, base, initExp) {
     var prefixes = {}
-    var factor = initExp ? Math.pow(base, initExp) : 1
     forEach(prefixesList, function (prefix, i) {
       prefixes[prefix] = Math.pow(base, i + (initExp || 0))
-      factor *= base
     })
 
     return new Scale(prefixes)
