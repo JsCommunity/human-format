@@ -1,15 +1,15 @@
 # human-format
 
-[![Build Status](https://img.shields.io/travis/julien-f/human-format/master.svg)](http://travis-ci.org/julien-f/human-format)
-[![Dependency Status](https://david-dm.org/julien-f/human-format/status.svg?theme=shields.io)](https://david-dm.org/julien-f/human-format)
-[![devDependency Status](https://david-dm.org/julien-f/human-format/dev-status.svg?theme=shields.io)](https://david-dm.org/julien-f/human-format#info=devDependencies)
+[![Build Status](https://img.shields.io/travis/JsCommunity/human-format/master.svg)](http://travis-ci.org/JsCommunity/human-format)
+[![Dependency Status](https://david-dm.org/JsCommunity/human-format/status.svg?theme=shields.io)](https://david-dm.org/JsCommunity/human-format)
+[![devDependency Status](https://david-dm.org/JsCommunity/human-format/dev-status.svg?theme=shields.io)](https://david-dm.org/JsCommunity/human-format#info=devDependencies)
 
 > Converts a number to/from a human readable string: `1337` ↔ `1.34kB`
 
 
 ## Install
 
-Download [manually](https://github.com/julien-f/human-format/releases) or with package-manager.
+Download [manually](https://github.com/JsCommunity/human-format/releases) or with package-manager.
 
 #### [npm](https://npmjs.org/package/human-format)
 
@@ -100,7 +100,7 @@ the code.
 
 You may:
 
-- report any [issue](https://github.com/julien-f/human-format/issues)
+- report any [issue](https://github.com/JsCommunity/human-format/issues)
   you've encountered;
 - fork and create a pull request.
 
