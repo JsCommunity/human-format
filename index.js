@@ -47,7 +47,7 @@
 
   // https://www.npmjs.org/package/escape-regexp
   function escapeRegexp (str) {
-    return str.replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1')
+    return str.replace(/([.*+?=^!:${}()|[\]/\\])/g, '\\$1')
   }
 
   function forEach (arr, iterator) {
