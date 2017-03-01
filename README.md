@@ -7,20 +7,28 @@
 > Converts a number to/from a human readable string: `1337` ↔ `1.34kB`
 
 
-## Install
+## Installation
 
-Download [manually](https://github.com/JsCommunity/human-format/releases) or with package-manager.
+### Node & [Browserify](http://browserify.org/)/[Webpack](https://webpack.js.org/)
 
-#### [npm](https://npmjs.org/package/human-format)
-
-```
-npm install --save human-format
-```
-
-#### bower
+Installation of the [npm package](https://npmjs.org/package/human-format):
 
 ```
-bower install --save human-format
+> npm install --save human-format
+```
+
+Then require the package:
+
+```javascript
+var humanFormat = require('human-format');
+```
+
+### Browser
+
+You can directly use the build provided at [unpkg.com](https://unpkg.com):
+
+```html
+<script src="https://unpkg.com/human-format@0.8/dist/human-format.js"></script>
 ```
 
 ## Usage

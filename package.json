@@ -18,6 +18,7 @@
   "scripts": {
     "commitmsg": "yarn test",
     "dev-test": "jest --watch",
+    "prepublish": "mkdir -p dist && browserify -s humanFormat index.js | uglifyjs -c > dist/human-format.js",
     "pretest": "standard",
     "test": "jest"
   },
@@ -29,8 +30,14 @@
   "author": "Julien Fontanet <julien.fontanet@isonoe.net> (http://julien.isonoe.net/)",
   "license": "ISC",
   "devDependencies": {
+    "browserify": "^14.1.0",
     "husky": "^0.13.1",
     "jest": "^19.0.2",
-    "standard": "^9.0.0"
-  }
+    "standard": "^9.0.0",
+    "uglify-js": "^2.8.3"
+  },
+  "files": [
+    "dist/",
+    "index.js"
+  ]
 }
