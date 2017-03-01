@@ -16,6 +16,7 @@
     "unit"
   ],
   "scripts": {
+    "commitmsg": "yarn test",
     "dev-test": "jest --watch",
     "pretest": "standard",
     "test": "jest"
@@ -28,6 +29,7 @@
   "author": "Julien Fontanet <julien.fontanet@isonoe.net> (http://julien.isonoe.net/)",
   "license": "ISC",
   "devDependencies": {
+    "husky": "^0.13.1",
     "jest": "^19.0.2",
     "standard": "^9.0.0"
   }
