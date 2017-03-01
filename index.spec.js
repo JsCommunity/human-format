@@ -1,14 +1,10 @@
 'use strict'
 
-/* eslint-env mocha */
+/* eslint-env jest */
 
 // ===================================================================
 
 var humanFormat = require('./')
-
-// -------------------------------------------------------------------
-
-var expect = require('chai').expect
 
 // ===================================================================
 
@@ -23,10 +19,10 @@ var data = [
 ]
 
 function compareRaw (actual, expected) {
-  expect(actual).to.be.an('object')
-  expect(actual.value).to.be.closeTo(expected.value, 1e-3)
-  expect(actual.prefix).to.equal(expected.prefix)
-  expect(actual.unit).to.equal(expected.unit)
+  expect(typeof actual).toBe('object')
+  expect(actual.value).toBeCloseTo(expected.value, 3)
+  expect(actual.prefix).toBe(expected.prefix)
+  expect(actual.unit).toBe(expected.unit)
 }
 
 // ===================================================================
@@ -45,23 +41,23 @@ describe('humanFormat()', function () {
     ].forEach(function (value) {
       expect(function () {
         humanFormat(value)
-      }).to['throw'](TypeError)
+      }).toThrow(TypeError)
     })
   })
 
   it('should convert number to human readable string', function () {
     data.forEach(function (datum) {
-      expect(humanFormat(datum[0])).to.equal(datum[1])
+      expect(humanFormat(datum[0])).toBe(datum[1])
       compareRaw(humanFormat.raw(datum[0]), datum[2])
     })
   })
 
   it('can use custom units', function () {
-    expect(humanFormat(0, { unit: 'g' })).to.equal('0 g')
+    expect(humanFormat(0, { unit: 'g' })).toBe('0 g')
   })
 
   it('can use custom separators', function () {
-    expect(humanFormat(1337, {separator: ' - '})).to.equal('1.34 - k')
+    expect(humanFormat(1337, {separator: ' - '})).toBe('1.34 - k')
   })
 
   it('can use custom scale', function () {
@@ -70,7 +66,7 @@ describe('humanFormat()', function () {
       1024,
       0
     )
-    expect(humanFormat(102400, { scale: scale })).to.equal('100 ki')
+    expect(humanFormat(102400, { scale: scale })).toBe('100 ki')
     compareRaw(humanFormat.raw(102400, { scale: scale }), {
       value: 100,
       prefix: 'ki'
@@ -78,16 +74,16 @@ describe('humanFormat()', function () {
   })
 
   it('can force a prefix', function () {
-    expect(humanFormat(100, { unit: 'm', prefix: 'k' })).to.equal('0.1 km')
+    expect(humanFormat(100, { unit: 'm', prefix: 'k' })).toBe('0.1 km')
     compareRaw(humanFormat.raw(100, { unit: 'm', prefix: 'k' }), {
       value: 0.1,
       prefix: 'k'
     })
   })
 
-  context('with decimalDigits opts', function () {
+  describe('with decimalDigits opts', function () {
     it('should return decimal digit as given', function () {
-      expect(humanFormat(2358, { decimals: 1, prefix: 'k' })).to.equal('2.4 k')
+      expect(humanFormat(2358, { decimals: 1, prefix: 'k' })).toBe('2.4 k')
     })
   })
 })
@@ -97,12 +93,12 @@ describe('humanFormat.parse()', function () {
 
   it('should convert human readable string to number', function () {
     data.forEach(function (datum) {
-      expect(parse(datum[1])).to.be.closeTo(datum[0], datum[0] * 1e-3)
+      expect(parse(datum[1])).toBeCloseTo(datum[0], 3)
     // compareRaw(parse.raw(datum[1]), datum[2])
     })
   })
 
   it('handle as gracefully as possible incorrect case', function () {
-    expect(parse('1g')).to.be.equal(1e9)
+    expect(parse('1g')).toBe(1e9)
   })
 })

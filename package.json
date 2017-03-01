@@ -16,8 +16,9 @@
     "unit"
   ],
   "scripts": {
-    "lint": "standard",
-    "test": "npm run lint && mocha index.spec.js"
+    "dev-test": "jest --watch",
+    "pretest": "standard",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -27,8 +28,7 @@
   "author": "Julien Fontanet <julien.fontanet@isonoe.net> (http://julien.isonoe.net/)",
   "license": "ISC",
   "devDependencies": {
-    "chai": "^3.0.0",
-    "mocha": "^3.0.2",
+    "jest": "^19.0.2",
     "standard": "^9.0.0"
   }
 }
