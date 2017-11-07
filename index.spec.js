@@ -60,30 +60,50 @@ describe('humanFormat()', function () {
     expect(humanFormat(1337, {separator: ' - '})).toBe('1.34 - k')
   })
 
-  it('can use custom scale', function () {
-    var scale = humanFormat.Scale.create(
-      ',ki,Mi,Gi'.split(','),
-      1024,
-      0
-    )
-    expect(humanFormat(102400, { scale: scale })).toBe('100 ki')
-    compareRaw(humanFormat.raw(102400, { scale: scale }), {
-      value: 100,
-      prefix: 'ki'
+  describe('with scale opts', function () {
+    it('should use this custom scale', function () {
+      var scale = humanFormat.Scale.create(
+        ',ki,Mi,Gi'.split(','),
+        1024,
+        0
+      )
+      expect(humanFormat(102400, { scale: scale })).toBe('100 ki')
+      compareRaw(humanFormat.raw(102400, { scale: scale }), {
+        value: 100,
+        prefix: 'ki'
+      })
+    })
+
+    it('throws of unknown scale', function () {
+      expect(function () {
+        humanFormat(102400, { scale: 'foo' })
+      }).toThrow('missing scale')
     })
   })
 
-  it('can force a prefix', function () {
-    expect(humanFormat(100, { unit: 'm', prefix: 'k' })).toBe('0.1 km')
-    compareRaw(humanFormat.raw(100, { unit: 'm', prefix: 'k' }), {
-      value: 0.1,
-      prefix: 'k'
+  describe('with prefix opts', function () {
+    it('should use this prefix', function () {
+      expect(humanFormat(100, { unit: 'm', prefix: 'k' })).toBe('0.1 km')
+      compareRaw(humanFormat.raw(100, { unit: 'm', prefix: 'k' }), {
+        value: 0.1,
+        prefix: 'k'
+      })
+    })
+
+    it('throws of unknown prefix', function () {
+      expect(function () {
+        humanFormat(102400, { prefix: 'foo' })
+      }).toThrow('invalid prefix')
     })
   })
 
-  describe('with decimalDigits opts', function () {
-    it('should return decimal digit as given', function () {
+  describe('with decimals opts', function () {
+    it('should round to decimal digits', function () {
       expect(humanFormat(2358, { decimals: 1, prefix: 'k' })).toBe('2.4 k')
+    })
+
+    it('should change the unit if necessary', function () {
+      expect(humanFormat(999.9, { decimals: 0 })).toBe('1 k')
     })
   })
 })
