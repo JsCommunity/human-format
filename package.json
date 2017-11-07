@@ -30,11 +30,11 @@
   "author": "Julien Fontanet <julien.fontanet@isonoe.net> (http://julien.isonoe.net/)",
   "license": "ISC",
   "devDependencies": {
-    "browserify": "^14.1.0",
-    "husky": "^0.13.1",
-    "jest": "^19.0.2",
-    "standard": "^9.0.0",
-    "uglify-js": "^2.8.3"
+    "browserify": "^14.5.0",
+    "husky": "^0.14.3",
+    "jest": "^21.2.1",
+    "standard": "^10.0.3",
+    "uglify-js": "^3.1.8"
   },
   "files": [
     "dist/",
