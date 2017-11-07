@@ -18,20 +18,16 @@
 
   // =================================================================
 
-  function assignBase (dst, src) {
-    var prop
-    for (prop in src) {
-      if (has(src, prop)) {
-        dst[prop] = src[prop]
-      }
-    }
-  }
   function assign (dst, src) {
-    var i, n
-    for (i = 0, n = arguments.length; i < n; ++i) {
+    var i, n, prop
+    for (i = 1, n = arguments.length; i < n; ++i) {
       src = arguments[i]
-      if (src) {
-        assignBase(dst, src)
+      if (src != null) {
+        for (prop in src) {
+          if (has(src, prop)) {
+            dst[prop] = src[prop]
+          }
+        }
       }
     }
     return dst
@@ -68,42 +64,19 @@
 
   var has = (function (hasOwnProperty) {
     return function has (obj, prop) {
-      return obj && hasOwnProperty.call(obj, prop)
+      return obj != null && hasOwnProperty.call(obj, prop)
     }
   })(Object.prototype.hasOwnProperty)
 
-  var toString = (function (toString_) {
-    return function toString (val) {
-      return toString_.call(val)
-    }
-  })(Object.prototype.toString)
-
-  function isDefined (val) {
-    /* jshint eqnull:true */
-    return val != null
-  }
-
-  var isNumber = (function (tag) {
-    return function isNumber (value) {
-      return (value === value) && (toString(value) === tag) // eslint-disable-line no-self-compare
-    }
-  })(toString(0))
-
-  var isString = (function (tag) {
-    return function isString (value) {
-      return (toString(value) === tag)
-    }
-  })(toString(''))
-
   function resolve (container, entry) {
-    while (isString(entry)) {
+    while (typeof entry === 'string') {
       entry = container[entry]
     }
     return entry
   }
 
   function round (f, n) {
-    if (!n) {
+    if (n === undefined) {
       return Math.round(f)
     }
 
@@ -150,8 +123,11 @@
 
   Scale.create = function Scale$create (prefixesList, base, initExp) {
     var prefixes = {}
+    if (initExp === undefined) {
+      initExp = 0
+    }
     forEach(prefixesList, function (prefix, i) {
-      prefixes[prefix] = Math.pow(base, i + (initExp || 0))
+      prefixes[prefix] = Math.pow(base, i + initExp)
     })
 
     return new Scale(prefixes)
@@ -159,8 +135,6 @@
 
   // Binary search to find the greatest index which has a value <=.
   Scale.prototype.findPrefix = function Scale$findPrefix (value) {
-    /* jshint bitwise: false */
-
     var list = this._list
     var low = 0
     var high = list.length - 1
@@ -183,8 +157,8 @@
   Scale.prototype.parse = function Scale$parse (str, strict) {
     var matches = str.match(this._regexp)
 
-    if (!matches) {
-      return null
+    if (matches === null) {
+      return
     }
 
     var prefix = matches[2]
@@ -199,7 +173,7 @@
       prefix = this._lcPrefixes[prefix]
       factor = this._prefixes[prefix]
     } else {
-      return null
+      return
     }
 
     return {
@@ -261,7 +235,7 @@
   }
 
   function humanFormat$parse$raw (str, opts) {
-    if (!isString(str)) {
+    if (typeof str !== 'string') {
       throw new TypeError('str must be a string')
     }
 
@@ -270,7 +244,7 @@
 
     // Get current scale.
     var scale = resolve(scales, opts.scale)
-    if (!scale) {
+    if (scale === undefined) {
       throw new Error('missing scale')
     }
 
@@ -281,7 +255,7 @@
     // the returned value should be: { value: <value>, unit: matchedUnit }
 
     var info = scale.parse(str, opts.strict)
-    if (!info) {
+    if (info === undefined) {
       throw new Error('cannot parse str')
     }
 
@@ -297,7 +271,7 @@
       }
     }
 
-    if (!isNumber(value)) {
+    if (typeof value !== 'number' || Number.isNaN(value)) {
       throw new TypeError('value must be a number')
     }
 
@@ -306,13 +280,13 @@
 
     // Get current scale.
     var scale = resolve(scales, opts.scale)
-    if (!scale) {
+    if (scale === undefined) {
       throw new Error('missing scale')
     }
 
     var prefix = opts.prefix
     var factor
-    if (isDefined(prefix)) {
+    if (prefix !== undefined) {
       if (!has(scale._prefixes, prefix)) {
         throw new Error('invalid prefix')
       }
