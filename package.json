@@ -1,6 +1,7 @@
 {
   "name": "human-format",
   "version": "0.8.0",
+  "license": "ISC",
   "description": "Converts a number to/from a human readable string: `1337` ↔ `1.34kB`",
   "keywords": [
     "byte",
@@ -15,20 +16,23 @@
     "size",
     "unit"
   ],
-  "scripts": {
-    "commitmsg": "yarn test",
-    "dev-test": "jest --watch",
-    "prepublish": "mkdir -p dist && browserify -s humanFormat index.js | uglifyjs -c > dist/human-format.js",
-    "pretest": "standard",
-    "test": "jest"
-  },
+  "homepage": "https://github.com/JsCommunity/human-format",
+  "bugs": "https://github.com/JsCommunity/human-format/issues",
   "repository": {
     "type": "git",
     "url": "http://github.com/JsCommunity/human-format"
   },
-  "bugs": "https://github.com/JsCommunity/human-format/issues",
-  "author": "Julien Fontanet <julien.fontanet@isonoe.net> (http://julien.isonoe.net/)",
-  "license": "ISC",
+  "author": {
+    "name": "Julien Fontanet",
+    "email": "julien.fontanet@isonoe.net"
+  },
+  "preferGlobal": false,
+  "files": [
+    "index.js"
+  ],
+  "engines": {
+    "node": ">=4"
+  },
   "devDependencies": {
     "browserify": "^14.5.0",
     "husky": "^0.14.3",
@@ -36,11 +40,15 @@
     "standard": "^10.0.3",
     "uglify-js": "^3.1.8"
   },
-  "files": [
-    "dist/",
-    "index.js"
-  ],
+  "scripts": {
+    "commitmsg": "yarn test",
+    "dev-test": "jest --watch",
+    "prepublishOnly": "mkdir -p dist && browserify -s humanFormat index.js | uglifyjs -c > dist/human-format.js",
+    "pretest": "standard --fix",
+    "test": "jest"
+  },
   "jest": {
-    "collectCoverage": true
+    "collectCoverage": true,
+    "testEnvironment": "node"
   }
 }
