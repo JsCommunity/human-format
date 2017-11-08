@@ -75,15 +75,6 @@
     return entry
   }
 
-  function round (f, n) {
-    if (n === undefined) {
-      return Math.round(f)
-    }
-
-    var p = Math.pow(10, n)
-    return Math.round(f * p) / p
-  }
-
   // =================================================================
 
   function Scale (prefixes) {
@@ -205,27 +196,29 @@
   }
 
   var defaults = {
-    scale: 'SI',
-
-    // Strict mode prevents parsing of incorrectly cased prefixes.
-    strict: false,
-
-    // Unit to use for formatting.
-    unit: '',
-
     // Decimal digits for formatting.
     decimals: 2,
 
     // separator to use between value and units
-    separator: ' '
+    separator: ' ',
+
+    // Unit to use for formatting.
+    unit: ''
+  }
+  var rawDefaults = {
+    scale: 'SI',
+
+    // Strict mode prevents parsing of incorrectly cased prefixes.
+    strict: false
   }
 
   function humanFormat (value, opts) {
     opts = assign({}, defaults, opts)
 
     var info = humanFormat$raw(value, opts)
+    value = String(info.value)
     var suffix = info.prefix + opts.unit
-    return round(info.value, opts.decimals) + (suffix ? opts.separator + suffix : '')
+    return suffix === '' ? value : value + opts.separator + suffix
   }
 
   function humanFormat$parse (str, opts) {
@@ -240,7 +233,7 @@
     }
 
     // Merge default options.
-    opts = assign({}, defaults, opts)
+    opts = assign({}, rawDefaults, opts)
 
     // Get current scale.
     var scale = resolve(scales, opts.scale)
@@ -276,7 +269,7 @@
     }
 
     // Merge default options.
-    opts = assign({}, defaults, opts)
+    opts = assign({}, rawDefaults, opts)
 
     // Get current scale.
     var scale = resolve(scales, opts.scale)
@@ -284,6 +277,7 @@
       throw new Error('missing scale')
     }
 
+    var decimals = opts.decimals
     var prefix = opts.prefix
     var factor
     if (prefix !== undefined) {
@@ -292,14 +286,28 @@
       }
 
       factor = scale._prefixes[prefix]
+      value /= factor
+      if (decimals !== undefined) {
+        var p = Math.pow(10, decimals)
+        value = Math.round(value * p) / p
+      }
     } else {
       var _ref = scale.findPrefix(value)
-      prefix = _ref.prefix
       factor = _ref.factor
-    }
 
-    // Rebase using current factor.
-    value /= factor
+      if (decimals !== undefined) {
+        do {
+          factor = _ref.factor
+          var r = Math.pow(10, decimals) / factor
+          value = Math.round(value * r) / r
+        } while ((_ref = scale.findPrefix(value)).factor !== factor)
+      } else {
+        factor = _ref.factor
+      }
+
+      value /= factor
+      prefix = _ref.prefix
+    }
 
     return {
       prefix: prefix,
