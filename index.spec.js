@@ -100,10 +100,18 @@ describe('humanFormat()', function () {
   describe('with decimals opts', function () {
     it('should round to decimal digits', function () {
       expect(humanFormat(2358, { decimals: 1, prefix: 'k' })).toBe('2.4 k')
+      expect(humanFormat(111111111, { decimals: 1 })).toBe('111.1 M')
+      expect(humanFormat(111111111, { decimals: 2 })).toBe('111.11 M')
+      expect(humanFormat(100000001, { decimals: 1 })).toBe('100 M')
+      expect(humanFormat(100000001, { decimals: 4 })).toBe('100 M')
+      expect(humanFormat(11111, { decimals: 1 })).toBe('11.1 k')
+      expect(humanFormat(111111111111, { decimals: 2 })).toBe('111.11 G')
+      expect(humanFormat(111111111111111, { decimals: 2 })).toBe('111.11 T')
     })
 
     it('should change the unit if necessary', function () {
       expect(humanFormat(999.9, { decimals: 0 })).toBe('1 k')
+      expect(humanFormat(999.9, { decimals: 1 })).toBe('999.9')
     })
   })
 })
