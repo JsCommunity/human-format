@@ -74,6 +74,19 @@ describe('humanFormat()', function () {
       })
     })
 
+    it('should use a simplified custom scale', function () {
+      var scale = new humanFormat.Scale({
+        K: 1000,
+        M: 1000000,
+        B: 1000000000
+      })
+      expect(humanFormat(100, { scale: scale, decimals: 0 })).toBe('100') // fails, this returns "0 K" and there is no way to specify no prefix
+      expect(humanFormat(1000, { scale: scale, decimals: 0 })).toBe('1 K')
+      expect(humanFormat(1000000, { scale: scale, decimals: 0 })).toBe('1 M')
+      expect(humanFormat(1000000000, { scale: scale, decimals: 0 })).toBe('1 B') // runs infinitely in the do-while loops
+      expect(humanFormat(1000000000000, { scale: scale, decimals: 0 })).toBe('1,000 B') // fails, this returns "1000 B"
+    })
+
     it('throws of unknown scale', function () {
       expect(function () {
         humanFormat(102400, { scale: 'foo' })
