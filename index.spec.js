@@ -98,9 +98,9 @@ describe('humanFormat()', function () {
   })
 
   describe('with decimals opts', function () {
-    it.only('should round to decimal digits', function () {
+    it('should round to decimal digits', function () {
       expect(humanFormat(2358, { decimals: 1, prefix: 'k' })).toBe('2.4 k')
-      expect(humanFormat(111111111, { decimals: 1 })).toBe('111.1 k')
+      expect(humanFormat(111111111, { decimals: 1 })).toBe('111.1 M')
     })
 
     it('should change the unit if necessary', function () {

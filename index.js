@@ -277,7 +277,12 @@
       throw new Error('missing scale')
     }
 
+    var power
     var decimals = opts.decimals
+    if (decimals !== undefined) {
+      power = Math.pow(10, decimals)
+    }
+
     var prefix = opts.prefix
     var factor
     if (prefix !== undefined) {
@@ -286,32 +291,26 @@
       }
 
       factor = scale._prefixes[prefix]
-      value /= factor
-      if (decimals !== undefined) {
-        var p = Math.pow(10, decimals)
-        value = Math.round(value * p) / p
-      }
     } else {
       var _ref = scale.findPrefix(value)
-      factor = _ref.factor
-
-      if (decimals !== undefined) {
+      if (power !== undefined) {
         do {
           factor = _ref.factor
-          var r = Math.pow(10, decimals) / factor
+          var r = power / factor
           value = Math.round(value * r) / r
         } while ((_ref = scale.findPrefix(value)).factor !== factor)
       } else {
         factor = _ref.factor
       }
 
-      value /= factor
       prefix = _ref.prefix
     }
 
     return {
       prefix: prefix,
-      value: value
+      value: power === undefined
+        ? value / factor
+        : Math.round(value * power / factor) / power
     }
   }
 
