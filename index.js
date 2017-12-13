@@ -286,27 +286,26 @@
       }
 
       factor = scale._prefixes[prefix]
-      value /= factor
-      if (decimals !== undefined) {
-        var p = Math.pow(10, decimals)
-        value = Math.round(value * p) / p
-      }
     } else {
       var _ref = scale.findPrefix(value)
-      factor = _ref.factor
 
       if (decimals !== undefined) {
+        var roundedValue
         do {
           factor = _ref.factor
           var r = Math.pow(10, decimals) / factor
-          value = Math.round(value * r) / r
-        } while ((_ref = scale.findPrefix(value)).factor !== factor)
+          roundedValue = Math.round(value * r) / r
+        } while ((_ref = scale.findPrefix(roundedValue)).factor !== factor)
       } else {
         factor = _ref.factor
       }
 
-      value /= factor
       prefix = _ref.prefix
+    }
+
+    value /= factor
+    if (decimals !== undefined) {
+      value = Number(value.toFixed(decimals))
     }
 
     return {
