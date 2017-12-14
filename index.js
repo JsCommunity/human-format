@@ -296,8 +296,13 @@
       if (power !== undefined) {
         do {
           factor = _ref.factor
-          var r = power / factor
-          value = Math.round(value * r) / r
+
+          // factor is usually >> power, therefore it's better to
+          // divide factor by power than the other way to limit
+          // numerical error
+          var r = factor / power
+
+          value = Math.round(value / r) * r
         } while ((_ref = scale.findPrefix(value)).factor !== factor)
       } else {
         factor = _ref.factor
