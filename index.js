@@ -105,7 +105,7 @@
 
     escapedPrefixes.sort(compareLongestFirst)
     this._regexp = new RegExp(
-      '^\\s*(\\d+(?:\\.\\d+)?)\\s*(' +
+      '^\\s*(-)?\\s*(\\d+(?:\\.\\d+)?)\\s*(' +
       escapedPrefixes.join('|') +
       ')\\s*(.*)\\s*?$',
       'i'
@@ -152,7 +152,7 @@
       return
     }
 
-    var prefix = matches[2]
+    var prefix = matches[3]
     var factor
 
     if (has(this._prefixes, prefix)) {
@@ -167,11 +167,16 @@
       return
     }
 
+    var value = +matches[2]
+    if (matches[1] !== undefined) {
+      value = -value
+    }
+
     return {
       factor: factor,
       prefix: prefix,
-      unit: matches[3],
-      value: +matches[1]
+      unit: matches[4],
+      value: value
     }
   }
 
@@ -262,6 +267,10 @@
         value: 0,
         prefix: ''
       }
+    } else if (value < 0) {
+      var result = humanFormat$raw(-value, opts)
+      result.value = -result.value
+      return result
     }
 
     if (typeof value !== 'number' || Number.isNaN(value)) {

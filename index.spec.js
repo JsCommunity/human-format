@@ -17,6 +17,11 @@ var data = [
   [1e12, '1 T', { value: 1, prefix: 'T' }],
   [1e28, '10000 Y', { value: 10000, prefix: 'Y' }]
 ]
+data.forEach(([ num, str, raw ]) => {
+  if (num !== 0) {
+    data.push([ -num, '-' + str, { __proto__: raw, value: -raw.value } ])
+  }
+})
 
 function compareRaw (actual, expected) {
   expect(typeof actual).toBe('object')
