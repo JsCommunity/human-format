@@ -17,9 +17,11 @@ var data = [
   [1e12, '1 T', { value: 1, prefix: 'T' }],
   [1e28, '10000 Y', { value: 10000, prefix: 'Y' }]
 ]
-data.forEach(([ num, str, raw ]) => {
+data.forEach(function (datum) {
+  var num = datum[0]
   if (num !== 0) {
-    data.push([ -num, '-' + str, { __proto__: raw, value: -raw.value } ])
+    var raw = datum[2]
+    data.push([ -num, '-' + datum[1], { __proto__: raw, value: -raw.value } ])
   }
 })
 
