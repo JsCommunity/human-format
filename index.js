@@ -185,7 +185,7 @@
   var scales = {
     // https://en.wikipedia.org/wiki/Binary_prefix
     binary: Scale.create(
-      ',ki,Mi,Gi,Ti,Pi,Ei,Zi,Yi'.split(','),
+      ',Ki,Mi,Gi,Ti,Pi,Ei,Zi,Yi'.split(','),
       1024
     ),
 
