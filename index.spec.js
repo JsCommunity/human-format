@@ -64,7 +64,7 @@ describe('humanFormat()', function () {
   })
 
   it('can use custom separators', function () {
-    expect(humanFormat(1337, {separator: ' - '})).toBe('1.34 - k')
+    expect(humanFormat(1337, { separator: ' - ' })).toBe('1.34 - k')
   })
 
   describe('with scale opts', function () {
