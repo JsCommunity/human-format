@@ -322,9 +322,11 @@
 
     return {
       prefix: prefix,
-      value: power === undefined
+      value: (
+        power === undefined
         ? value / factor
         : Math.round(value * power / factor) / power
+      ).toFixed(decimals)
     }
   }
 
