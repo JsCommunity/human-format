@@ -226,6 +226,17 @@
     return suffix === '' ? value : value + opts.separator + suffix
   }
 
+  var humanFormat$bytes$opts = { scale: 'binary', unit: 'B' }
+  function humanFormat$bytes(value, opts) {
+    return humanFormat(
+      value,
+      opts === undefined
+        ? humanFormat$bytes$opts
+        : assign({}, humanFormat$bytes$opts, opts)
+    )
+  }
+
+
   function humanFormat$parse (str, opts) {
     var info = humanFormat$parse$raw(str, opts)
 
@@ -328,6 +339,7 @@
     }
   }
 
+  humanFormat.bytes = humanFormat$bytes
   humanFormat.parse = humanFormat$parse
   humanFormat$parse.raw = humanFormat$parse$raw
   humanFormat.raw = humanFormat$raw

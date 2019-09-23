@@ -52,6 +52,10 @@ humanFormat(65536, {
 })
 //=> 64 kiB
 
+// There is a helper for this.
+humanFormat.bytes(65536)
+//=> 64 kiB
+
 // A custom separator can be specified.
 humanFormat(1337, {
   separator: ' - '
