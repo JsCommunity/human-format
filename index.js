@@ -236,8 +236,17 @@
     )
   }
 
+  function balanceFactor (info) {
+    while (Math.floor(info.value) !== info.value && info.factor >= 10) {
+      info.value = info.value * 10
+      info.factor = info.factor / 10
+    }
+
+    return info
+  }
+
   function humanFormat$parse (str, opts) {
-    var info = humanFormat$parse$raw(str, opts)
+    var info = balanceFactor(humanFormat$parse$raw(str, opts))
 
     return info.value * info.factor
   }

@@ -21,7 +21,7 @@ data.forEach(function (datum) {
   var num = datum[0]
   if (num !== 0) {
     var raw = datum[2]
-    data.push([ -num, '-' + datum[1], { __proto__: raw, value: -raw.value } ])
+    data.push([-num, '-' + datum[1], { __proto__: raw, value: -raw.value }])
   }
 })
 
@@ -129,5 +129,9 @@ describe('humanFormat.parse()', function () {
 
   it('handle as gracefully as possible incorrect case', function () {
     expect(parse('1g')).toBe(1e9)
+  })
+
+  it('handle decimal error', function () {
+    expect(parse('8.3M')).toBe(8300000)
   })
 })
