@@ -21,7 +21,7 @@ data.forEach(function (datum) {
   var num = datum[0]
   if (num !== 0) {
     var raw = datum[2]
-    data.push([ -num, '-' + datum[1], { __proto__: raw, value: -raw.value } ])
+    data.push([-num, '-' + datum[1], { __proto__: raw, value: -raw.value }])
   }
 })
 
