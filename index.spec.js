@@ -104,15 +104,15 @@ describe('humanFormat()', function () {
     })
   })
 
-  describe('with decimals opts', function () {
+  describe('with maxDecimals opts', function () {
     it('should round to decimal digits', function () {
-      expect(humanFormat(2358, { decimals: 1, prefix: 'k' })).toBe('2.4 k')
-      expect(humanFormat(111111111, { decimals: 1 })).toBe('111.1 M')
-      expect(humanFormat(1e9, { decimals: 0 })).toBe('1 G')
+      expect(humanFormat(2358, { maxDecimals: 1, prefix: 'k' })).toBe('2.4 k')
+      expect(humanFormat(111111111, { maxDecimals: 1 })).toBe('111.1 M')
+      expect(humanFormat(1e9, { maxDecimals: 0 })).toBe('1 G')
     })
 
     it('should change the unit if necessary', function () {
-      expect(humanFormat(999.9, { decimals: 0 })).toBe('1 k')
+      expect(humanFormat(999.9, { maxDecimals: 0 })).toBe('1 k')
     })
   })
 })

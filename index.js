@@ -202,7 +202,7 @@
 
   var defaults = {
     // Decimal digits for formatting.
-    decimals: 2,
+    maxDecimals: 2,
 
     // separator to use between value and units
     separator: ' ',
@@ -297,9 +297,9 @@
     }
 
     var power
-    var decimals = opts.decimals
-    if (decimals !== undefined) {
-      power = Math.pow(10, decimals)
+    var maxDecimals = opts.maxDecimals
+    if (maxDecimals !== undefined) {
+      power = Math.pow(10, maxDecimals)
     }
 
     var prefix = opts.prefix

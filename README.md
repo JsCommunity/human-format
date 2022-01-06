@@ -39,9 +39,9 @@ You can directly use the build provided at [unpkg.com](https://unpkg.com/human-f
 humanFormat(1337)
 //=> '1.34 k'
 
-// The number of decimals can be changed.
+// The maximum number of decimals can be changed.
 humanFormat(1337, {
-  decimals: 1
+  maxDecimals: 1
 })
 //=> '1.3 k'
 
