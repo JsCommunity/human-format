@@ -115,6 +115,17 @@ describe('humanFormat()', function () {
       expect(humanFormat(999.9, { maxDecimals: 0 })).toBe('1 k')
     })
   })
+
+  describe('with decimals opt', function () {
+    it('forces a fixed number of decimals', function () {
+      expect(humanFormat(1, { decimals: 2 })).toBe('1.00')
+      expect(humanFormat(1.11111, { decimals: 2 })).toBe('1.11')
+    })
+
+    it('takes precedence over maxDecimals', function () {
+      expect(humanFormat(1.1111, { decimals: 2, maxDecimals: 0 })).toBe('1.11')
+    })
+  })
 })
 
 describe('humanFormat.parse()', function () {

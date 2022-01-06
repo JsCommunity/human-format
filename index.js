@@ -220,8 +220,14 @@
   function humanFormat (value, opts) {
     opts = assign({}, defaults, opts)
 
+    var decimals = opts.decimals
+    if (decimals !== undefined) {
+      // humanFormat$raw should not round when using decimals option
+      delete opts.maxDecimals
+    }
+
     var info = humanFormat$raw(value, opts)
-    value = String(info.value)
+    value = decimals !== undefined ? info.value.toFixed(decimals) : String(info.value)
     var suffix = info.prefix + opts.unit
     return suffix === '' ? value : value + opts.separator + suffix
   }

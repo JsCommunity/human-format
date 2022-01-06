@@ -45,6 +45,12 @@ humanFormat(1337, {
 })
 //=> '1.3 k'
 
+// A fixed number of decimals can be set.
+humanFormat(1337, {
+  decimals: 4
+})
+//=> '1.3370 k'
+
 // Units and scales can be specified.
 humanFormat(65536, {
   scale: 'binary',
