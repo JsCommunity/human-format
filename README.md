@@ -6,7 +6,6 @@
 
 > Converts a number to/from a human readable string: `1337` ↔ `1.34kB`
 
-
 ## Installation
 
 ### Node & [Browserify](http://browserify.org/)/[Webpack](https://webpack.js.org/)
@@ -20,7 +19,7 @@ Installation of the [npm package](https://npmjs.org/package/human-format):
 Then require the package:
 
 ```javascript
-var humanFormat = require('human-format');
+var humanFormat = require("human-format");
 ```
 
 ### Browser
@@ -36,36 +35,36 @@ You can directly use the build provided at [unpkg.com](https://unpkg.com/human-f
 ### Formatting
 
 ```javascript
-humanFormat(1337)
+humanFormat(1337);
 //=> '1.34 k'
 
 // The maximum number of decimals can be changed.
 humanFormat(1337, {
-  maxDecimals: 1
-})
+  maxDecimals: 1,
+});
 //=> '1.3 k'
 
 // A fixed number of decimals can be set.
 humanFormat(1337, {
-  decimals: 4
-})
+  decimals: 4,
+});
 //=> '1.3370 k'
 
 // Units and scales can be specified.
 humanFormat(65536, {
-  scale: 'binary',
-  unit: 'B'
-})
+  scale: "binary",
+  unit: "B",
+});
 //=> 64 kiB
 
 // There is a helper for this.
-humanFormat.bytes(65536)
+humanFormat.bytes(65536);
 //=> 64 kiB
 
 // A custom separator can be specified.
 humanFormat(1337, {
-  separator: ' - '
-})
+  separator: " - ",
+});
 //=> 1.34 - k
 
 // Custom scales can be created!
@@ -75,16 +74,16 @@ var timeScale = new humanFormat.Scale({
   hours: 3600,
   days: 86400,
   months: 2592000,
-})
-humanFormat(26729235, { scale: timeScale })
+});
+humanFormat(26729235, { scale: timeScale });
 //=> 10.31 months
 
 // You can force a prefix to be used.
-humanFormat(100, { unit: 'm', prefix: 'k' })
+humanFormat(100, { unit: "m", prefix: "k" });
 //=> 0.1 km
 
 // You can access the raw result.
-humanFormat.raw(100, { prefix: 'k' })
+humanFormat.raw(100, { prefix: "k" });
 //=> {
 //   prefix: 'k',
 //   value: 0.09999999999999999 // Close value, not rounded.
@@ -94,15 +93,15 @@ humanFormat.raw(100, { prefix: 'k' })
 ### Parsing
 
 ```javascript
-humanFormat.parse('1.34 kiB', { scale: 'binary' })
+humanFormat.parse("1.34 kiB", { scale: "binary" });
 //=> 1372.16
 
 // Fallbacks when possible if the prefix is incorrectly cased.
-humanFormat.parse('1 g')
+humanFormat.parse("1 g");
 // => 1000000000
 
 // You can access the raw result.
-humanFormat.parse.raw('1.34 kB')
+humanFormat.parse.raw("1.34 kB");
 //=> {
 //  factor: 1000,
 //  prefix: 'k',
@@ -113,7 +112,7 @@ humanFormat.parse.raw('1.34 kB')
 
 ## Contributions
 
-Contributions are *very* welcomed, either on the documentation or on
+Contributions are _very_ welcomed, either on the documentation or on
 the code.
 
 You may:

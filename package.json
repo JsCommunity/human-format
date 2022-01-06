@@ -34,25 +34,34 @@
     "node": ">=4"
   },
   "devDependencies": {
-    "browserify": "^16.2.3",
-    "husky": "^3.0.7",
+    "browserify": "^17.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "husky": "^4.3.8",
     "jest": "^24.8.0",
-    "standard": "^14.3.1",
+    "lint-staged": "^12.1.5",
+    "prettier": "^2.5.1",
     "uglify-js": "^3.1.8"
   },
   "scripts": {
     "dev-test": "jest --watch",
     "prepublishOnly": "mkdir -p dist && browserify -s humanFormat index.js | uglifyjs -c > dist/human-format.js",
-    "pretest": "standard --fix",
     "test": "jest"
-  },
-  "jest": {
-    "collectCoverage": true,
-    "testEnvironment": "node"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run test"
+      "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "eslint --ignore-pattern '!*'",
+      "jest --findRelatedTests --passWithNoTests"
+    ]
   }
 }
