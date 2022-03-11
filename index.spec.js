@@ -103,6 +103,14 @@ describe("humanFormat()", function () {
     it("should change the unit if necessary", function () {
       expect(humanFormat(999.9, { maxDecimals: 0 })).toBe("1 k");
     });
+
+    it("with auto ", function () {
+      expect(humanFormat(1181.1111, { maxDecimals: "auto" })).toBe("1.2 k");
+      expect(humanFormat(11911.1111, { maxDecimals: "auto" })).toBe("12 k");
+      expect(humanFormat(1.0, { maxDecimals: "auto" })).toBe("1");
+      expect(humanFormat(-5.36, { maxDecimals: "auto" })).toBe("-5.4");
+      expect(humanFormat(-15.36, { maxDecimals: "auto" })).toBe("-15");
+    });
   });
 
   describe("with decimals opt", function () {
