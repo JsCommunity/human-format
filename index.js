@@ -301,7 +301,10 @@
 
     var power;
     var maxDecimals = opts.maxDecimals;
-    if (maxDecimals !== undefined) {
+    var autoMaxDecimals = maxDecimals === "auto";
+    if (autoMaxDecimals) {
+      power = 10;
+    } else if (maxDecimals !== undefined) {
       power = Math.pow(10, maxDecimals);
     }
 
@@ -332,13 +335,18 @@
 
       prefix = _ref.prefix;
     }
+    value =
+      power === undefined
+        ? value / factor
+        : Math.round((value * power) / factor) / power;
+
+    if (autoMaxDecimals && Math.abs(value) >= 10) {
+      value = Math.round(value);
+    }
 
     return {
       prefix: prefix,
-      value:
-        power === undefined
-          ? value / factor
-          : Math.round((value * power) / factor) / power,
+      value: value,
     };
   }
 
