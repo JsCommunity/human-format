@@ -44,7 +44,7 @@ humanFormat(1337, {
 });
 //=> '1.3 k'
 
-// maxDecimals can be set to auto, so that there is 1 decimals between -10 an 10 excluded and none out of this interval.
+// maxDecimals can be set to auto, so that there is 1 decimal between -10 and 10 excluded and none out of this interval.
 humanFormat(1337, {
   maxDecimals: 'auto',
 });
