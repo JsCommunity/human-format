@@ -1,8 +1,10 @@
 "use strict";
 
-/* eslint-env jest */
+var assert = require("assert");
+var mocha = require("tap").mocha;
 
-// ===================================================================
+var describe = mocha.describe;
+var it = mocha.it;
 
 var humanFormat = require("./");
 
@@ -25,11 +27,15 @@ data.forEach(function (datum) {
   }
 });
 
+function assertCloseTo(actual, expected, digit) {
+  assert(Math.abs(expected - actual) < Math.pow(10, -(digit || 2)) / 2);
+}
+
 function compareRaw(actual, expected) {
-  expect(typeof actual).toBe("object");
-  expect(actual.value).toBeCloseTo(expected.value, 3);
-  expect(actual.prefix).toBe(expected.prefix);
-  expect(actual.unit).toBe(expected.unit);
+  assert.strictEqual(typeof actual, "object");
+  assertCloseTo(actual.value, expected.value, 3);
+  assert.strictEqual(actual.prefix, expected.prefix);
+  assert.strictEqual(actual.unit, expected.unit);
 }
 
 // ===================================================================
@@ -39,31 +45,31 @@ describe("humanFormat()", function () {
     [undefined, null, NaN, true, false, "a string", [], {}].forEach(function (
       value
     ) {
-      expect(function () {
+      assert.throws(function () {
         humanFormat(value);
-      }).toThrow(TypeError);
+      }, TypeError);
     });
   });
 
   it("should convert number to human readable string", function () {
     data.forEach(function (datum) {
-      expect(humanFormat(datum[0])).toBe(datum[1]);
+      assert.strictEqual(humanFormat(datum[0]), datum[1]);
       compareRaw(humanFormat.raw(datum[0]), datum[2]);
     });
   });
 
   it("can use custom units", function () {
-    expect(humanFormat(0, { unit: "g" })).toBe("0 g");
+    assert.strictEqual(humanFormat(0, { unit: "g" }), "0 g");
   });
 
   it("can use custom separators", function () {
-    expect(humanFormat(1337, { separator: " - " })).toBe("1.34 - k");
+    assert.strictEqual(humanFormat(1337, { separator: " - " }), "1.34 - k");
   });
 
   describe("with scale opts", function () {
     it("should use this custom scale", function () {
       var scale = humanFormat.Scale.create(",ki,Mi,Gi".split(","), 1024, 0);
-      expect(humanFormat(102400, { scale: scale })).toBe("100 ki");
+      assert.strictEqual(humanFormat(102400, { scale: scale }), "100 ki");
       compareRaw(humanFormat.raw(102400, { scale: scale }), {
         value: 100,
         prefix: "ki",
@@ -71,15 +77,21 @@ describe("humanFormat()", function () {
     });
 
     it("throws of unknown scale", function () {
-      expect(function () {
-        humanFormat(102400, { scale: "foo" });
-      }).toThrow("missing scale");
+      assert.throws(
+        function () {
+          humanFormat(102400, { scale: "foo" });
+        },
+        { message: "missing scale" }
+      );
     });
   });
 
   describe("with prefix opts", function () {
     it("should use this prefix", function () {
-      expect(humanFormat(100, { unit: "m", prefix: "k" })).toBe("0.1 km");
+      assert.strictEqual(
+        humanFormat(100, { unit: "m", prefix: "k" }),
+        "0.1 km"
+      );
       compareRaw(humanFormat.raw(100, { unit: "m", prefix: "k" }), {
         value: 0.1,
         prefix: "k",
@@ -87,40 +99,55 @@ describe("humanFormat()", function () {
     });
 
     it("throws of unknown prefix", function () {
-      expect(function () {
-        humanFormat(102400, { prefix: "foo" });
-      }).toThrow("invalid prefix");
+      assert.throws(
+        function () {
+          humanFormat(102400, { prefix: "foo" });
+        },
+        { message: "invalid prefix" }
+      );
     });
   });
 
   describe("with maxDecimals opts", function () {
     it("should round to decimal digits", function () {
-      expect(humanFormat(2358, { maxDecimals: 1, prefix: "k" })).toBe("2.4 k");
-      expect(humanFormat(111111111, { maxDecimals: 1 })).toBe("111.1 M");
-      expect(humanFormat(1e9, { maxDecimals: 0 })).toBe("1 G");
+      assert.strictEqual(
+        humanFormat(2358, { maxDecimals: 1, prefix: "k" }),
+        "2.4 k"
+      );
+      assert.strictEqual(humanFormat(111111111, { maxDecimals: 1 }), "111.1 M");
+      assert.strictEqual(humanFormat(1e9, { maxDecimals: 0 }), "1 G");
     });
 
     it("should change the unit if necessary", function () {
-      expect(humanFormat(999.9, { maxDecimals: 0 })).toBe("1 k");
+      assert.strictEqual(humanFormat(999.9, { maxDecimals: 0 }), "1 k");
     });
 
     it("with auto ", function () {
-      expect(humanFormat(1181.1111, { maxDecimals: "auto" })).toBe("1.2 k");
-      expect(humanFormat(11911.1111, { maxDecimals: "auto" })).toBe("12 k");
-      expect(humanFormat(1.0, { maxDecimals: "auto" })).toBe("1");
-      expect(humanFormat(-5.36, { maxDecimals: "auto" })).toBe("-5.4");
-      expect(humanFormat(-15.36, { maxDecimals: "auto" })).toBe("-15");
+      assert.strictEqual(
+        humanFormat(1181.1111, { maxDecimals: "auto" }),
+        "1.2 k"
+      );
+      assert.strictEqual(
+        humanFormat(11911.1111, { maxDecimals: "auto" }),
+        "12 k"
+      );
+      assert.strictEqual(humanFormat(1.0, { maxDecimals: "auto" }), "1");
+      assert.strictEqual(humanFormat(-5.36, { maxDecimals: "auto" }), "-5.4");
+      assert.strictEqual(humanFormat(-15.36, { maxDecimals: "auto" }), "-15");
     });
   });
 
   describe("with decimals opt", function () {
     it("forces a fixed number of decimals", function () {
-      expect(humanFormat(1, { decimals: 2 })).toBe("1.00");
-      expect(humanFormat(1.11111, { decimals: 2 })).toBe("1.11");
+      assert.strictEqual(humanFormat(1, { decimals: 2 }), "1.00");
+      assert.strictEqual(humanFormat(1.11111, { decimals: 2 }), "1.11");
     });
 
     it("takes precedence over maxDecimals", function () {
-      expect(humanFormat(1.1111, { decimals: 2, maxDecimals: 0 })).toBe("1.11");
+      assert.strictEqual(
+        humanFormat(1.1111, { decimals: 2, maxDecimals: 0 }),
+        "1.11"
+      );
     });
   });
 });
@@ -130,12 +157,12 @@ describe("humanFormat.parse()", function () {
 
   it("should convert human readable string to number", function () {
     data.forEach(function (datum) {
-      expect(parse(datum[1])).toBeCloseTo(datum[0], 3);
+      assertCloseTo(parse(datum[1]), datum[0], 3);
       // compareRaw(parse.raw(datum[1]), datum[2])
     });
   });
 
   it("handle as gracefully as possible incorrect case", function () {
-    expect(parse("1g")).toBe(1e9);
+    assert.strictEqual(parse("1g"), 1e9);
   });
 });
