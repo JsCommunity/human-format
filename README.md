@@ -27,7 +27,7 @@ var humanFormat = require("human-format");
 You can directly use the build provided at [unpkg.com](https://unpkg.com/human-format/):
 
 ```html
-<script src="https://unpkg.com/human-format@0.10/index.js"></script>
+<script src="https://unpkg.com/human-format@1/index.js"></script>
 ```
 
 ## Usage
