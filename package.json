@@ -28,6 +28,7 @@
   },
   "preferGlobal": false,
   "files": [
+    "index.d.ts",
     "index.js"
   ],
   "types": "index.d.ts",
