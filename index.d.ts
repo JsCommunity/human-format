@@ -1,13 +1,4 @@
-type BinaryPrefix =
-  | ""
-  | "Ki"
-  | "Mi"
-  | "Gi"
-  | "Ti"
-  | "Pi"
-  | "Ei"
-  | "Zi"
-  | "Yi";
+type BinaryPrefix = "" | "Ki" | "Mi" | "Gi" | "Ti" | "Pi" | "Ei" | "Zi" | "Yi";
 
 type SIPrefix =
   | "y"
@@ -63,10 +54,7 @@ export declare function humanFormat<S extends ScaleName>(
 ): string;
 
 export declare namespace humanFormat {
-  function bytes<S extends ScaleName>(
-    value: number,
-    opts?: Options<S>
-  ): string;
+  function bytes<S extends ScaleName>(value: number, opts?: Options<S>): string;
 
   function parse<S extends ScaleName>(str: string, opts?: Options<S>): number;
 
@@ -77,10 +65,7 @@ export declare namespace humanFormat {
     ): ParsedInfo<S>;
   }
 
-  function raw<S extends ScaleName>(
-    value: number,
-    opts?: Options<S>
-  ): Info<S>;
+  function raw<S extends ScaleName>(value: number, opts?: Options<S>): Info<S>;
 
   export { bytes, parse, raw, Prefix, BinaryPrefix };
 }

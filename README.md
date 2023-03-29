@@ -46,12 +46,12 @@ humanFormat(1337, {
 
 // maxDecimals can be set to auto, so that there is 1 decimal between -10 and 10 excluded and none out of this interval.
 humanFormat(1337, {
-  maxDecimals: 'auto',
+  maxDecimals: "auto",
 });
 //=> '1.3 k'
 
 humanFormat(13337, {
-  maxDecimals: 'auto',
+  maxDecimals: "auto",
 });
 //=> '13 k'
 

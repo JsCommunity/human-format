@@ -37,32 +37,29 @@
   },
   "devDependencies": {
     "browserify": "^17.0.0",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.2.0",
-    "husky": "^4.3.8",
-    "lint-staged": "^12.1.5",
-    "prettier": "^2.5.1",
+    "eslint": "^8.37.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.2.0",
+    "prettier": "^2.8.7",
     "tap": "^16.0.0",
     "uglify-js": "^3.1.8"
   },
   "scripts": {
     "dev-test": "tap --no-check-coverage --watch",
     "prepublishOnly": "mkdir -p dist && browserify -s humanFormat index.js | uglifyjs -c > dist/human-format.js",
-    "test": "tap --no-check-coverage"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && npm run test"
-    }
+    "test": "tap --no-check-coverage && true",
+    "prepare": "husky install"
   },
   "lint-staged": {
-    "*.js": [
-      "prettier --write",
-      "eslint --ignore-pattern '!*'"
-    ]
+    "*": [
+      "npm test",
+      "prettier --ignore-unknown --write"
+    ],
+    "*.{,c,m}js": "eslint --ignore-pattern '!*'"
   }
 }
