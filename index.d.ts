@@ -65,9 +65,13 @@ export declare namespace humanFormat {
     ): ParsedInfo<S>;
   }
 
+  namespace Scale {
+    function create<S extends ScaleName>(prefixesList: Array<string>, base: number, initExp: number): S
+  }
+
   function raw<S extends ScaleName>(value: number, opts?: Options<S>): Info<S>;
 
-  export { bytes, parse, raw, Prefix, BinaryPrefix };
+  export { bytes, parse, raw, Prefix, BinaryPrefix, Scale };
 }
 
 export default humanFormat;
