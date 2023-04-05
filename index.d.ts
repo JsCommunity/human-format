@@ -21,6 +21,8 @@ type SIPrefix =
 
 export type ScaleName = "binary" | "SI";
 
+export type Scale = humanFormat.Scale
+
 export type Prefix<S extends ScaleName> = S extends "binary"
   ? BinaryPrefix
   : SIPrefix;
@@ -29,7 +31,7 @@ export declare interface Options<S extends ScaleName> {
   maxDecimals?: number | "auto";
   separator?: string;
   unit?: string;
-  scale?: S;
+  scale?: S | Scale;
   strict?: boolean;
   prefix?: Prefix<S>;
   decimals?: number;
@@ -65,8 +67,12 @@ export declare namespace humanFormat {
     ): ParsedInfo<S>;
   }
 
+  class Scale {
+    constructor(prefixes: Record<string, number>)
+  }
+
   namespace Scale {
-    function create<S extends ScaleName>(prefixesList: Array<string>, base: number, initExp: number): S
+    function create(prefixesList: Array<string>, base: number, initExp?: number): Scale
   }
 
   function raw<S extends ScaleName>(value: number, opts?: Options<S>): Info<S>;
