@@ -89,6 +89,11 @@ var timeScale = new humanFormat.Scale({
 humanFormat(26729235, { scale: timeScale });
 //=> 10.31 months
 
+// Helper when the scale is regular, i.e. prefixes are powers of a constant factor
+var binaryScale = humanFormat.Scale.create(["", "Ki", "Mi", "Gi", "Ti"], 1024);
+humanFormat(173559053, { scale: binaryScale });
+//=> 165.52 Mi
+
 // You can force a prefix to be used.
 humanFormat(100, { unit: "m", prefix: "k" });
 //=> 0.1 km
