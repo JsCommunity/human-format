@@ -21,11 +21,19 @@ type SIPrefix =
 
 export type ScaleName = "binary" | "SI";
 
-export type Prefix<S extends ScaleName> = S extends "binary"
-  ? BinaryPrefix
-  : SIPrefix;
+export type Scale<T extends string> = humanFormat.Scale<T>;
 
-export declare interface Options<S extends ScaleName> {
+export type ScaleLike = Scale<string> | ScaleName;
+
+export type Prefix<S extends ScaleLike> = S extends Scale<infer U>
+  ? U
+  : S extends "binary"
+  ? BinaryPrefix
+  : S extends "SI"
+  ? SIPrefix
+  : never;
+
+export declare interface Options<S extends ScaleLike> {
   maxDecimals?: number | "auto";
   separator?: string;
   unit?: string;
@@ -35,39 +43,51 @@ export declare interface Options<S extends ScaleName> {
   decimals?: number;
 }
 
-export declare interface Info<S extends ScaleName> {
+export declare interface Info<S extends ScaleLike> {
   value: number;
   prefix: Prefix<S>;
   unit?: string;
 }
 
-export declare interface ParsedInfo<S extends ScaleName> {
+export declare interface ParsedInfo<S extends ScaleLike> {
   value: number;
   factor: number;
   prefix: Prefix<S>;
   unit?: string;
 }
 
-export declare function humanFormat<S extends ScaleName>(
+export declare function humanFormat<S extends ScaleLike>(
   value: number,
   opts?: Options<S>
 ): string;
 
 export declare namespace humanFormat {
-  function bytes<S extends ScaleName>(value: number, opts?: Options<S>): string;
+  function bytes<S extends ScaleLike>(value: number, opts?: Options<S>): string;
 
-  function parse<S extends ScaleName>(str: string, opts?: Options<S>): number;
+  function parse<S extends ScaleLike>(str: string, opts?: Options<S>): number;
 
   namespace parse {
-    function raw<S extends ScaleName>(
+    function raw<S extends ScaleLike>(
       str: string,
       opts?: Options<S>
     ): ParsedInfo<S>;
   }
 
-  function raw<S extends ScaleName>(value: number, opts?: Options<S>): Info<S>;
+  function raw<S extends ScaleLike>(value: number, opts?: Options<S>): Info<S>;
 
-  export { bytes, parse, raw, Prefix, BinaryPrefix };
+  class Scale<P extends string> {
+    constructor(prefixes: Record<P, number>);
+  }
+
+  namespace Scale {
+    function create<P extends string>(
+      prefixes: P[],
+      base: number,
+      initExp?: number
+    ): Scale<P>;
+  }
+
+  export { bytes, parse, raw, Prefix, BinaryPrefix, Scale };
 }
 
 export default humanFormat;
