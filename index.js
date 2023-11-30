@@ -189,6 +189,14 @@
       1024
     ),
 
+    duration: new Scale({
+      seconds: 0,
+      minutes: 60,
+      hours: 3600,
+      days: 86400,
+      months: 2592000
+    }),
+
     // https://en.wikipedia.org/wiki/Metric_prefix
     //
     // Not all prefixes are present, only those which are multiple of
@@ -218,7 +226,7 @@
   }
 
   function humanFormat (value, opts) {
-    opts = assign({}, defaults, opts)
+    opts = assign({}, defaults, typeof opts === 'string' ? { unit: opts } : opts)
 
     var info = humanFormat$raw(value, opts)
     value = String(info.value)
