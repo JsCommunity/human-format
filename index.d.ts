@@ -108,5 +108,5 @@ declare module "human-format" {
 
   const humanFormat: HumanFormat;
 
-  export = humanFormat;
+  export default humanFormat;
 }
