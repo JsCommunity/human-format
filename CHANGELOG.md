@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Formatting is about twice as fast: options are no longer copied on each call.
 
+### Fixed
+
+- Formatting throws for negative numbers given as strings (`"-5"`), like for any other string.
+
 ## [1.3.0] - 2026-10-10
 
 ### Added

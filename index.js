@@ -310,6 +310,11 @@
   // maxDecimals is a parameter because humanFormat() has its own default and
   // overrides it with decimals.
   function rawFormat(value, opts, maxDecimals) {
+    // value !== value is the ES5 equivalent of Number.isNaN(value)
+    if (typeof value !== "number" || value !== value) {
+      throw new TypeError("value must be a number");
+    }
+
     // Zero is a special case, it never has any prefix.
     if (value === 0) {
       return {
@@ -321,11 +326,6 @@
     var negative = value < 0;
     if (negative) {
       value = -value;
-    }
-
-    // value !== value is the ES5 equivalent of Number.isNaN(value)
-    if (typeof value !== "number" || value !== value) {
-      throw new TypeError("value must be a number");
     }
 
     // Get current scale.

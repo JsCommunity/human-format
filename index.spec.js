@@ -53,7 +53,7 @@ function compareRaw(actual, expected) {
 
 describe("humanFormat()", function () {
   it("throws for an invalid number", function () {
-    [undefined, null, NaN, true, false, "a string", [], {}].forEach(
+    [undefined, null, NaN, true, false, "a string", "-5", [], {}].forEach(
       function (value) {
         assert.throws(function () {
           humanFormat(value);
