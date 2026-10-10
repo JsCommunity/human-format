@@ -36,40 +36,14 @@
     return dst;
   }
 
-  function compareLongestFirst(a, b) {
-    return b.length - a.length;
-  }
-
-  function compareSmallestFactorFirst(a, b) {
-    return a.factor - b.factor;
-  }
-
   // https://www.npmjs.org/package/escape-regexp
   function escapeRegexp(str) {
     return str.replace(/([.*+?=^!:${}()|[\]/\\])/g, "\\$1");
   }
 
-  function forEach(arr, iterator) {
-    var i, n;
-    for (i = 0, n = arr.length; i < n; ++i) {
-      iterator(arr[i], i);
-    }
+  function has(obj, prop) {
+    return obj != null && Object.prototype.hasOwnProperty.call(obj, prop);
   }
-
-  function forOwn(obj, iterator) {
-    var prop;
-    for (prop in obj) {
-      if (has(obj, prop)) {
-        iterator(obj[prop], prop);
-      }
-    }
-  }
-
-  var has = (function (hasOwnProperty) {
-    return function has(obj, prop) {
-      return obj != null && hasOwnProperty.call(obj, prop);
-    };
-  })(Object.prototype.hasOwnProperty);
 
   // Number.MAX_SAFE_INTEGER is not ES5
   var MAX_SAFE_INTEGER = 9007199254740991;
@@ -88,29 +62,35 @@
 
     var escapedPrefixes = [];
     var list = [];
-    forOwn(prefixes, function (factor, prefix) {
-      escapedPrefixes.push(escapeRegexp(prefix));
-
-      list.push({
-        factor: factor,
-        prefix: prefix,
-      });
-    });
-
-    // Adds lower cased prefixes for case insensitive fallback, except when
-    // ambiguous (e.g. M and m).
     var lcPrefixes = (this._lcPrefixes = {});
-    forOwn(prefixes, function (factor, prefix) {
-      var lcPrefix = prefix.toLowerCase();
-      if (lcPrefix === prefix || !has(prefixes, lcPrefix)) {
-        lcPrefixes[lcPrefix] = prefix;
-      }
-    });
+    var prefix, lcPrefix;
+    for (prefix in prefixes) {
+      if (has(prefixes, prefix)) {
+        escapedPrefixes.push(escapeRegexp(prefix));
 
-    list.sort(compareSmallestFactorFirst);
+        list.push({
+          factor: prefixes[prefix],
+          prefix: prefix,
+        });
+
+        // Adds lower cased prefixes for case insensitive fallback, except
+        // when ambiguous (e.g. M and m).
+        lcPrefix = prefix.toLowerCase();
+        if (lcPrefix === prefix || !has(prefixes, lcPrefix)) {
+          lcPrefixes[lcPrefix] = prefix;
+        }
+      }
+    }
+
+    list.sort(function (a, b) {
+      return a.factor - b.factor;
+    });
     this._list = list;
 
-    escapedPrefixes.sort(compareLongestFirst);
+    // longest first
+    escapedPrefixes.sort(function (a, b) {
+      return b.length - a.length;
+    });
     this._regexp = new RegExp(
       "^\\s*(-)?\\s*(\\d+(?:\\.\\d+)?(?:e[+-]?\\d+)?)\\s*(" +
         escapedPrefixes.join("|") +
@@ -124,9 +104,9 @@
     if (initExp === undefined) {
       initExp = 0;
     }
-    forEach(prefixesList, function (prefix, i) {
-      prefixes[prefix] = Math.pow(base, i + initExp);
-    });
+    for (var i = 0, n = prefixesList.length; i < n; ++i) {
+      prefixes[prefixesList[i]] = Math.pow(base, i + initExp);
+    }
 
     return new Scale(prefixes);
   };
