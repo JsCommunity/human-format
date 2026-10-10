@@ -25,6 +25,7 @@
 - **Message format**: Conventional Commits with an optional scope, e.g. `feat(types): …`, `chore(README): …`, `chore: update dev deps`. Release commits are the bare version, created by `npm version`.
 - **Branching**: maintainers push chores directly to `master`. External contributions come in as PRs and are squash-merged (`… (#54)`).
 - **Ask first**: `npm version` and `npm publish`.
+- **Reformat-only commits**: add their full SHA to `.git-blame-ignore-revs` (GitHub uses it; locally: `git config blame.ignoreRevsFile .git-blame-ignore-revs`).
 
 ## Development workflow
 
