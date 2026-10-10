@@ -48,7 +48,8 @@
   "scripts": {
     "dev-test": "node --test --watch index.spec.js",
     "test": "node --test --experimental-test-coverage --test-coverage-include=index.js --test-coverage-lines=100 --test-coverage-branches=100 --test-coverage-functions=100 index.spec.js && tsd && true",
-    "prepare": "husky"
+    "prepare": "husky",
+    "version": "node scripts/changelog-version.js && git add CHANGELOG.md"
   },
   "lint-staged": {
     "*": [
