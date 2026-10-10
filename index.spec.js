@@ -154,6 +154,12 @@ describe("humanFormat()", function () {
       assert.strictEqual(humanFormat(1.11111, { decimals: 2 }), "1.11");
     });
 
+    it("should change the unit if necessary", function () {
+      assert.strictEqual(humanFormat(999999, { decimals: 0 }), "1 M");
+      assert.strictEqual(humanFormat(999999, { decimals: 2 }), "1.00 M");
+      assert.strictEqual(humanFormat(999.5, { decimals: 0 }), "1 k");
+    });
+
     it("takes precedence over maxDecimals", function () {
       assert.strictEqual(
         humanFormat(1.1111, { decimals: 2, maxDecimals: 0 }),

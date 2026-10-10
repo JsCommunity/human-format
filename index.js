@@ -220,8 +220,8 @@
 
     var decimals = opts.decimals;
     if (decimals !== undefined) {
-      // humanFormat$raw should not round when using decimals option
-      delete opts.maxDecimals;
+      // round at the displayed precision so that the prefix is changed if needed
+      opts.maxDecimals = decimals;
     }
 
     var info = humanFormat$raw(value, opts);
