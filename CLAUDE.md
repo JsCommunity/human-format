@@ -3,17 +3,17 @@
 ## Project context
 
 - **Stack**: plain JavaScript (ES5, UMD), no runtime dependencies, npm. Types are hand-written in `index.d.ts`.
-- **Layout**: `index.js` (all code), `index.d.ts` (types), `index.spec.js` (tests), `README.md` (API docs). Only `index.js` and `index.d.ts` are published.
+- **Layout**: `index.js` (all code), `index.d.ts` (types), `index.spec.js` (tests), `index.test-d.ts` (type tests), `README.md` (API docs). Only `index.js` and `index.d.ts` are published.
 - **Setup**: `npm ci` (also installs the husky hook).
 - **Build**: none for dev. `prepublishOnly` bundles `dist/human-format.js` (browserify + uglify) for unpkg.
-- **Test**: `npm test` (about 1s, no network or I/O). Single test: `npx tap --no-check-coverage --grep=<top-level describe regex> index.spec.js`. Watch mode: `npm run dev-test`.
-- **Lint/format**: `npx eslint .` and `npx prettier --write <files>`. Nothing type-checks `index.d.ts`.
+- **Test**: `npm test` (about 2s, no network or I/O): tap, then tsd for the types. Single test: `npx tap --no-check-coverage --grep=<top-level describe regex> index.spec.js`. Watch mode: `npm run dev-test`.
+- **Lint/format**: `npx eslint .` and `npx prettier --write <files>`.
 
 ## Code conventions
 
 - **Compatibility**: ES5 syntax only (`var`, `function`, no arrow functions, classes or template literals). ESLint enforces it with `ecmaVersion: 5`. The code must keep working in browsers via the UMD wrapper and on Node ≥4 (`engines`).
 - **Tests**: tap's mocha interface (`describe`/`it` + `assert`) in `index.spec.js`. Every behavior change needs a case there. Parse/format round trips go in the shared `data` table.
-- **Public API**: any change to options or exports updates `index.d.ts` and `README.md` in the same commit.
+- **Public API**: any change to options or exports updates `index.d.ts`, `index.test-d.ts` and `README.md` in the same commit.
 
 ## Pitfalls
 
