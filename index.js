@@ -1,6 +1,7 @@
 // UMD: https://github.com/umdjs/umd/blob/master/returnExports.js
 (function (root, factory) {
   /* global define: false */
+  // istanbul ignore next: AMD and browser globals are not testable in Node
   if (typeof define === "function" && define.amd) {
     // AMD. Register as an anonymous module.
     define([], factory);
@@ -24,6 +25,7 @@
       src = arguments[i];
       if (src != null) {
         for (prop in src) {
+          // istanbul ignore else: only guards against inherited properties
           if (has(src, prop)) {
             dst[prop] = src[prop];
           }
@@ -56,6 +58,7 @@
   function forOwn(obj, iterator) {
     var prop;
     for (prop in obj) {
+      // istanbul ignore else: only guards against inherited properties
       if (has(obj, prop)) {
         iterator(obj[prop], prop);
       }

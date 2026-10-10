@@ -52,7 +52,7 @@
   "scripts": {
     "dev-test": "tap --no-check-coverage --watch",
     "prepublishOnly": "mkdir -p dist && browserify -s humanFormat index.js | uglifyjs -c > dist/human-format.js",
-    "test": "tap --no-check-coverage && true",
+    "test": "tap && true",
     "prepare": "husky install"
   },
   "lint-staged": {

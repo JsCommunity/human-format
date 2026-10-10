@@ -17,7 +17,7 @@
 
 ## Pitfalls
 
-- `npx tap` without `--no-check-coverage` fails on tap's 100% coverage threshold. Use `npm test`.
+- `npm test` enforces 100% coverage (lines, branches, functions). Filtered runs (`--grep`) fail it, hence `--no-check-coverage`. Code unreachable in Node gets `// istanbul ignore …: <reason>`.
 - `npm test` is `tap … && true` so that lint-staged's appended file paths end up as arguments to `true`, and the full suite runs on every commit. Don't "simplify" it.
 - Tests leave `.nyc_output/` behind (git-ignored). `npx prettier --check .` reports it as unformatted.
 
