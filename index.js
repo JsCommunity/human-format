@@ -184,7 +184,11 @@
     // Not all prefixes are present, only those which are multiple of
     // 1000, because humans usually prefer to see close numbers using
     // the same unit to ease the comparison.
-    SI: Scale.create("y,z,a,f,p,n,µ,m,,k,M,G,T,P,E,Z,Y".split(","), 1000, -8),
+    SI: Scale.create(
+      "q,r,y,z,a,f,p,n,µ,m,,k,M,G,T,P,E,Z,Y,R,Q".split(","),
+      1000,
+      -10
+    ),
   };
 
   var defaults = {

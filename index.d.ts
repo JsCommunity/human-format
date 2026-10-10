@@ -9,6 +9,8 @@ declare module "human-format" {
       "" | "Ki" | "Mi" | "Gi" | "Ti" | "Pi" | "Ei" | "Zi" | "Yi";
 
     export type SIPrefix =
+      | "q"
+      | "r"
       | "y"
       | "z"
       | "a"
@@ -25,7 +27,9 @@ declare module "human-format" {
       | "P"
       | "E"
       | "Z"
-      | "Y";
+      | "Y"
+      | "R"
+      | "Q";
 
     export type ScaleName = "binary" | "SI";
 

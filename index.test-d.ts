@@ -12,6 +12,7 @@ expectError(humanFormat(1337, { rounding: "trunc" }));
 expectError(humanFormat(1337, { scale: "foo" }));
 expectError(humanFormat(1337, { prefix: "Ki" }));
 expectError(humanFormat(1337, { scale: "binary", prefix: "k" }));
+expectType<string>(humanFormat(1e30, { prefix: "Q" }));
 
 expectType<string>(humanFormat.bytes(1337));
 expectType<string>(humanFormat.bytes(1337, { prefix: "Ki" }));

@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- SI prefixes adopted in 2022: `R` (ronna, 10²⁷), `Q` (quetta, 10³⁰), `r` (ronto, 10⁻²⁷) and `q` (quecto, 10⁻³⁰), e.g. `1e30` gives `1 Q` instead of `1000000 Y`.
+
 ### Changed
 
 - Formatting is about twice as fast: options are no longer copied on each call.

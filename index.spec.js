@@ -11,13 +11,15 @@ var humanFormat = require("./");
 // ===================================================================
 
 var data = [
-  [1e-25, "0.1 y", { value: 0.1, prefix: "y" }],
+  [1e-25, "100 r", { value: 100, prefix: "r" }],
   [1e-3, "1 m", { value: 1, prefix: "m" }],
   [0, "0", { value: 0, prefix: "" }],
   [1, "1", { value: 1, prefix: "" }],
   [10, "10", { value: 10, prefix: "" }],
   [1e12, "1 T", { value: 1, prefix: "T" }],
-  [1e28, "10000 Y", { value: 10000, prefix: "Y" }],
+  [1e27, "1 R", { value: 1, prefix: "R" }],
+  [1e33, "1000 Q", { value: 1000, prefix: "Q" }],
+  [1e-30, "1 q", { value: 1, prefix: "q" }],
   [1024, "1 Ki", { value: 1, prefix: "Ki" }, { scale: "binary" }],
   [1572864, "1.5 Mi", { value: 1.5, prefix: "Mi" }, { scale: "binary" }],
 ];
