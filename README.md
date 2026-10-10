@@ -1,19 +1,17 @@
 # human-format
 
 [![CI](https://github.com/JsCommunity/human-format/actions/workflows/ci.yml/badge.svg)](https://github.com/JsCommunity/human-format/actions/workflows/ci.yml)
-[![Dependency Status](https://david-dm.org/JsCommunity/human-format/status.svg?theme=shields.io)](https://david-dm.org/JsCommunity/human-format)
-[![devDependency Status](https://david-dm.org/JsCommunity/human-format/dev-status.svg?theme=shields.io)](https://david-dm.org/JsCommunity/human-format#info=devDependencies)
 
 > Converts a number to/from a human readable string: `1337` ↔ `1.34kB`
 
 ## Installation
 
-### Node & [Browserify](http://browserify.org/)/[Webpack](https://webpack.js.org/)
+### npm
 
 Installation of the [npm package](https://npmjs.org/package/human-format):
 
 ```
-> npm install --save human-format
+> npm install human-format
 ```
 
 Then require the package:
@@ -21,6 +19,8 @@ Then require the package:
 ```javascript
 var humanFormat = require("human-format");
 ```
+
+TypeScript types are included.
 
 ### Browser
 
@@ -66,11 +66,11 @@ humanFormat(65536, {
   scale: "binary",
   unit: "B",
 });
-//=> 64 kiB
+//=> 64 KiB
 
-// There is a helper for this.
+// There is a helper for this, which accepts the same options.
 humanFormat.bytes(65536);
-//=> 64 kiB
+//=> 64 KiB
 
 // A custom separator can be specified.
 humanFormat(1337, {
@@ -102,19 +102,23 @@ humanFormat(100, { unit: "m", prefix: "k" });
 humanFormat.raw(100, { prefix: "k" });
 //=> {
 //   prefix: 'k',
-//   value: 0.09999999999999999 // Close value, not rounded.
+//   value: 0.1
 // }
 ```
 
 ### Parsing
 
 ```javascript
-humanFormat.parse("1.34 kiB", { scale: "binary" });
+humanFormat.parse("1.34 KiB", { scale: "binary" });
 //=> 1372.16
 
 // Fallbacks when possible if the prefix is incorrectly cased.
 humanFormat.parse("1 g");
 // => 1000000000
+
+// Strict mode rejects incorrectly cased prefixes.
+humanFormat.parse("1 g", { strict: true });
+// throws Error: cannot parse str
 
 // You can access the raw result.
 humanFormat.parse.raw("1.34 kB");
