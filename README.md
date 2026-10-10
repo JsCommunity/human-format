@@ -2,7 +2,12 @@
 
 [![CI](https://github.com/JsCommunity/human-format/actions/workflows/ci.yml/badge.svg)](https://github.com/JsCommunity/human-format/actions/workflows/ci.yml)
 
-> Converts a number to/from a human readable string: `1337` ↔ `1.34kB`
+> Converts a number to/from a human readable string: `1337` ↔ `1.34 kB`
+
+- Formats and parses
+- SI, binary and custom scales, with configurable decimals and rounding
+- No dependencies, a single ES5 file: Node ≥4 and any browser
+- TypeScript types included
 
 ## Installation
 
@@ -80,6 +85,10 @@ humanFormat(65536, {
 humanFormat.bytes(65536);
 //=> 64 KiB
 
+// Use the SI scale for multiples of 1000.
+humanFormat.bytes(1500, { scale: "SI" });
+//=> 1.5 kB
+
 // A custom separator can be specified.
 humanFormat(1337, {
   separator: " - ",
@@ -147,6 +156,24 @@ humanFormat.parse.raw("1.34 kB");
 //  value: 1.34
 //}
 ```
+
+### Options
+
+| Option        | Default                           | Description                                                                    |
+| ------------- | --------------------------------- | ------------------------------------------------------------------------------ |
+| `maxDecimals` | `2` (none for `raw()`)            | Maximum number of decimals, or `"auto"`                                        |
+| `decimals`    |                                   | Fixed number of decimals, overrides `maxDecimals`                              |
+| `rounding`    | `"round"`                         | `"round"`, `"floor"` or `"ceil"`                                               |
+| `separator`   | `" "`                             | Between the value and the prefix+unit                                          |
+| `unit`        | `""` (`"B"` for `bytes()`)        | Appended when formatting; when parsing, optional but no other unit is accepted |
+| `scale`       | `"SI"` (`"binary"` for `bytes()`) | `"SI"`, `"binary"` or a `Scale`                                                |
+| `prefix`      |                                   | Forces this prefix when formatting                                             |
+| `strict`      | `false`                           | When parsing, rejects incorrectly cased prefixes                               |
+
+Errors:
+
+- `TypeError` if the value to format is not a number, or the string to parse is not a string
+- `Error` with the message `missing scale`, `invalid prefix`, `invalid rounding` or `cannot parse str`
 
 ## Contributions
 
