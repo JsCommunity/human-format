@@ -27,7 +27,7 @@
       src = arguments[i];
       if (src != null) {
         for (prop in src) {
-          if (has(src, prop)) {
+          if (has(src, prop) && src[prop] !== undefined) {
             dst[prop] = src[prop];
           }
         }
@@ -43,7 +43,8 @@
 
   // Reads an option without copying opts, which is costly on hot paths.
   function getOption(opts, defaults, name) {
-    return has(opts, name) ? opts[name] : defaults[name];
+    var value = has(opts, name) ? opts[name] : undefined;
+    return value === undefined ? defaults[name] : value;
   }
 
   function has(obj, prop) {

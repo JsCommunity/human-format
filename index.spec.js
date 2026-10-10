@@ -85,6 +85,19 @@ describe("humanFormat()", function () {
     });
   });
 
+  it("uses the defaults for options set to undefined", function () {
+    assert.strictEqual(
+      humanFormat(1337, {
+        maxDecimals: undefined,
+        rounding: undefined,
+        scale: undefined,
+        separator: undefined,
+        unit: undefined,
+      }),
+      "1.34 k"
+    );
+  });
+
   it("can use custom units", function () {
     assert.strictEqual(humanFormat(0, { unit: "g" }), "0 g");
   });
@@ -235,6 +248,10 @@ describe("humanFormat.bytes()", function () {
   it("accepts options", function () {
     assert.strictEqual(humanFormat.bytes(1536, { maxDecimals: 0 }), "2 KiB");
     assert.strictEqual(humanFormat.bytes(1000, { scale: "SI" }), "1 kB");
+    assert.strictEqual(
+      humanFormat.bytes(1024, { scale: undefined, unit: undefined }),
+      "1 KiB"
+    );
   });
 });
 
