@@ -41,6 +41,11 @@
     return str.replace(/([.*+?=^!:${}()|[\]/\\])/g, "\\$1");
   }
 
+  // Reads an option without copying opts, which is costly on hot paths.
+  function getOption(opts, defaults, name) {
+    return has(opts, name) ? opts[name] : defaults[name];
+  }
+
   function has(obj, prop) {
     return obj != null && Object.prototype.hasOwnProperty.call(obj, prop);
   }
@@ -202,21 +207,24 @@
   };
 
   function humanFormat(value, opts) {
-    opts = assign({}, defaults, opts);
+    var decimals = getOption(opts, defaults, "decimals");
 
-    var decimals = opts.decimals;
-    if (decimals !== undefined) {
-      // round at the displayed precision so that the prefix is changed if needed
-      opts.maxDecimals = decimals;
-    }
-
-    var info = humanFormat$raw(value, opts);
+    // round at the displayed precision so that the prefix is changed if needed
+    var info = rawFormat(
+      value,
+      opts,
+      decimals !== undefined
+        ? decimals
+        : getOption(opts, defaults, "maxDecimals")
+    );
     value =
       decimals !== undefined
         ? info.value.toFixed(decimals)
         : String(info.value);
-    var suffix = info.prefix + opts.unit;
-    return suffix === "" ? value : value + opts.separator + suffix;
+    var suffix = info.prefix + getOption(opts, defaults, "unit");
+    return suffix === ""
+      ? value
+      : value + getOption(opts, defaults, "separator") + suffix;
   }
 
   var humanFormat$bytes$opts = { scale: "binary", unit: "B" };
@@ -250,11 +258,8 @@
       throw new TypeError("str must be a string");
     }
 
-    // Merge default options.
-    opts = assign({}, rawDefaults, opts);
-
     // Get current scale.
-    var scale = resolve(scales, opts.scale);
+    var scale = resolve(scales, getOption(opts, rawDefaults, "scale"));
     if (scale === undefined) {
       throw new Error("missing scale");
     }
@@ -264,7 +269,7 @@
 
     // The unit, if specified, is optional but nothing else is accepted. It is
     // removed first, otherwise "1 m" with unit "m" would be parsed as milli.
-    var unit = opts.unit;
+    var unit = getOption(opts, rawDefaults, "unit");
     if (unit !== undefined) {
       str = str.trim();
       if (unit !== "" && str.slice(-unit.length) === unit) {
@@ -274,7 +279,7 @@
       }
     }
 
-    var info = scale.parse(str, opts.strict);
+    var info = scale.parse(str, getOption(opts, rawDefaults, "strict"));
     if (info === undefined || (unit !== undefined && info.unit !== "")) {
       throw new Error("cannot parse str");
     }
@@ -299,23 +304,23 @@
   var oppositeRoundings = { ceil: "floor", floor: "ceil" };
 
   function humanFormat$raw(value, opts) {
+    return rawFormat(value, opts, getOption(opts, rawDefaults, "maxDecimals"));
+  }
+
+  // maxDecimals is a parameter because humanFormat() has its own default and
+  // overrides it with decimals.
+  function rawFormat(value, opts, maxDecimals) {
     // Zero is a special case, it never has any prefix.
     if (value === 0) {
       return {
         value: 0,
         prefix: "",
       };
-    } else if (value < 0) {
-      // floor and ceil apply to the signed value
-      var rounding = opts != null && opts.rounding;
-      var result = humanFormat$raw(
-        -value,
-        has(oppositeRoundings, rounding)
-          ? assign({}, opts, { rounding: oppositeRoundings[rounding] })
-          : opts
-      );
-      result.value = -result.value;
-      return result;
+    }
+
+    var negative = value < 0;
+    if (negative) {
+      value = -value;
     }
 
     // value !== value is the ES5 equivalent of Number.isNaN(value)
@@ -323,22 +328,23 @@
       throw new TypeError("value must be a number");
     }
 
-    // Merge default options.
-    opts = assign({}, rawDefaults, opts);
-
     // Get current scale.
-    var scale = resolve(scales, opts.scale);
+    var scale = resolve(scales, getOption(opts, rawDefaults, "scale"));
     if (scale === undefined) {
       throw new Error("missing scale");
     }
 
-    if (!has(roundings, opts.rounding)) {
+    var rounding = getOption(opts, rawDefaults, "rounding");
+    if (!has(roundings, rounding)) {
       throw new Error("invalid rounding");
     }
-    var round = roundings[opts.rounding];
+    // floor and ceil apply to the signed value
+    if (negative && has(oppositeRoundings, rounding)) {
+      rounding = oppositeRoundings[rounding];
+    }
+    var round = roundings[rounding];
 
     var power;
-    var maxDecimals = opts.maxDecimals;
     var autoMaxDecimals = maxDecimals === "auto";
     if (autoMaxDecimals) {
       power = 10;
@@ -346,7 +352,7 @@
       power = Math.pow(10, maxDecimals);
     }
 
-    var prefix = opts.prefix;
+    var prefix = getOption(opts, rawDefaults, "prefix");
     var factor;
     if (prefix !== undefined) {
       if (!has(scale._prefixes, prefix)) {
@@ -384,7 +390,7 @@
 
     return {
       prefix: prefix,
-      value: value,
+      value: negative ? -value : value,
     };
   }
 
