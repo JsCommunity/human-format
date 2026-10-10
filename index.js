@@ -71,6 +71,9 @@
     };
   })(Object.prototype.hasOwnProperty);
 
+  // Number.MAX_SAFE_INTEGER is not ES5
+  var MAX_SAFE_INTEGER = 9007199254740991;
+
   function resolve(container, entry) {
     while (typeof entry === "string") {
       entry = container[entry];
@@ -246,6 +249,16 @@
   function humanFormat$parse(str, opts) {
     var info = humanFormat$parse$raw(str, opts);
 
+    // 8.3 * 1e6 is 8300000.000000001 but 83 * 1e6 / 10 is exact: when the
+    // digits times the factor is an exact integer, only the division rounds
+    var decimals = String(info.value).split(".")[1];
+    if (decimals !== undefined && decimals.indexOf("e") === -1) {
+      var power = Math.pow(10, decimals.length);
+      var scaled = Math.round(info.value * power) * info.factor;
+      if (scaled % 1 === 0 && Math.abs(scaled) <= MAX_SAFE_INTEGER) {
+        return scaled / power;
+      }
+    }
     return info.value * info.factor;
   }
 

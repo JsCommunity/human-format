@@ -194,6 +194,13 @@ describe("humanFormat.parse()", function () {
     });
   });
 
+  it("avoids floating point errors", function () {
+    assert.strictEqual(parse("8.3M"), 8300000);
+    assert.strictEqual(parse("-8.3M"), -8300000);
+    assert.strictEqual(parse("1.34 kiB", { scale: "binary" }), 1372.16);
+    assert.strictEqual(parse("0.00000015"), 1.5e-7);
+  });
+
   it("returns the unit", function () {
     assert.strictEqual(parse.raw("1 kB").unit, "B");
   });

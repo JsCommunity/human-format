@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Fixed
 
+- `parse()` avoids some floating point errors, e.g. `8.3M` gives `8300000` instead of `8300000.000000001` ([#29](https://github.com/JsCommunity/human-format/issues/29)).
 - `decimals` switches to the next prefix when rounding reaches it, e.g. `999999` gives `1 M` instead of `1000 k` ([#56](https://github.com/JsCommunity/human-format/issues/56)).
 - `parse()` accepts an incorrectly cased prefix whose lowercase form is a prefix itself, e.g. `100K` ([#31](https://github.com/JsCommunity/human-format/issues/31)).
 - Types: `index.d.ts` no longer fails to compile without `skipLibCheck` (`export =` mixed with other exports).
