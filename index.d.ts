@@ -6,15 +6,7 @@ declare module "human-format" {
 
   namespace humanFormat {
     export type BinaryPrefix =
-      | ""
-      | "Ki"
-      | "Mi"
-      | "Gi"
-      | "Ti"
-      | "Pi"
-      | "Ei"
-      | "Zi"
-      | "Yi";
+      "" | "Ki" | "Mi" | "Gi" | "Ti" | "Pi" | "Ei" | "Zi" | "Yi";
 
     export type SIPrefix =
       | "y"
@@ -39,15 +31,14 @@ declare module "human-format" {
 
     export type ScaleLike = Scale<string> | ScaleName;
 
-    export type Prefix<TScale extends ScaleLike> = TScale extends Scale<
-      infer TPrefix
-    >
-      ? TPrefix
-      : TScale extends "binary"
-      ? BinaryPrefix
-      : TScale extends "SI"
-      ? SIPrefix
-      : never;
+    export type Prefix<TScale extends ScaleLike> =
+      TScale extends Scale<infer TPrefix>
+        ? TPrefix
+        : TScale extends "binary"
+          ? BinaryPrefix
+          : TScale extends "SI"
+            ? SIPrefix
+            : never;
 
     export interface Options<TScale extends ScaleLike> {
       maxDecimals?: number | "auto";

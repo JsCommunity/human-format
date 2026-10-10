@@ -53,13 +53,13 @@ function compareRaw(actual, expected) {
 
 describe("humanFormat()", function () {
   it("throws for an invalid number", function () {
-    [undefined, null, NaN, true, false, "a string", [], {}].forEach(function (
-      value
-    ) {
-      assert.throws(function () {
-        humanFormat(value);
-      }, TypeError);
-    });
+    [undefined, null, NaN, true, false, "a string", [], {}].forEach(
+      function (value) {
+        assert.throws(function () {
+          humanFormat(value);
+        }, TypeError);
+      }
+    );
   });
 
   it("should convert number to human readable string", function () {
