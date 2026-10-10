@@ -62,6 +62,22 @@ describe("humanFormat()", function () {
     );
   });
 
+  it("does not depend on ES2015 built-ins", function () {
+    var isNaN = Number.isNaN;
+    delete Number.isNaN;
+    try {
+      assert.throws(
+        function () {
+          humanFormat(NaN);
+        },
+        { message: "value must be a number" }
+      );
+      assert.strictEqual(humanFormat(1), "1");
+    } finally {
+      Number.isNaN = isNaN;
+    }
+  });
+
   it("should convert number to human readable string", function () {
     data.forEach(function (datum) {
       assert.strictEqual(humanFormat(datum[0], datum[3]), datum[1]);

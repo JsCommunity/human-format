@@ -315,7 +315,8 @@
       return result;
     }
 
-    if (typeof value !== "number" || Number.isNaN(value)) {
+    // value !== value is the ES5 equivalent of Number.isNaN(value)
+    if (typeof value !== "number" || value !== value) {
       throw new TypeError("value must be a number");
     }
 
