@@ -1,10 +1,10 @@
 "use strict";
 
 var assert = require("assert");
-var mocha = require("tap").mocha;
+var test = require("node:test");
 
-var describe = mocha.describe;
-var it = mocha.it;
+var describe = test.describe;
+var it = test.it;
 
 var humanFormat = require("./");
 
