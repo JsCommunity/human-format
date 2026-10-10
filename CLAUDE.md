@@ -5,7 +5,7 @@
 - **Stack**: plain JavaScript (ES5, UMD), no runtime dependencies, npm. Types are hand-written in `index.d.ts`.
 - **Layout**: `index.js` (all code), `index.d.ts` (types), `index.spec.js` (tests), `index.test-d.ts` (type tests), `README.md` (API docs). Only `index.js` and `index.d.ts` are published.
 - **Setup**: `npm ci` (also installs the husky hook).
-- **Build**: none for dev. `prepublishOnly` bundles `dist/human-format.js` (browserify + uglify) for unpkg.
+- **Build**: none. `index.js` is published as-is; its UMD wrapper also serves browsers via unpkg.
 - **Test**: `npm test` (about 2s, no network or I/O): tap, then tsd for the types. Single test: `npx tap --no-check-coverage --grep=<top-level describe regex> index.spec.js`. Watch mode: `npm run dev-test`.
 - **Lint/format**: `npx eslint .` and `npx prettier --write <files>`.
 
