@@ -40,15 +40,15 @@
     "eslint": "^10.12.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-n": "^18.4.1",
-    "husky": "^8.0.0",
-    "lint-staged": "^13.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
     "prettier": "^3.9.9",
     "tsd": "^0.33.0"
   },
   "scripts": {
     "dev-test": "node --test --watch index.spec.js",
     "test": "node --test --experimental-test-coverage --test-coverage-include=index.js --test-coverage-lines=100 --test-coverage-branches=100 --test-coverage-functions=100 index.spec.js && tsd && true",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "lint-staged": {
     "*": [
