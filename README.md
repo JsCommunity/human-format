@@ -1,6 +1,8 @@
 # human-format
 
 [![CI](https://github.com/JsCommunity/human-format/actions/workflows/ci.yml/badge.svg)](https://github.com/JsCommunity/human-format/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/human-format)](https://npmjs.org/package/human-format)
+[![size](https://img.shields.io/bundlephobia/minzip/human-format)](https://bundlephobia.com/package/human-format)
 
 > Converts a number to/from a human readable string: `1337` ↔ `1.34 kB`
 
