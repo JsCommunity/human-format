@@ -1,0 +1,33 @@
+# CLAUDE.md
+
+## Project context
+
+- **Stack**: plain JavaScript (ES5, UMD), no runtime dependencies, npm. Types are hand-written in `index.d.ts`.
+- **Layout**: `index.js` (all code), `index.d.ts` (types), `index.spec.js` (tests), `README.md` (API docs). Only `index.js` and `index.d.ts` are published.
+- **Setup**: `npm ci` (also installs the husky hook).
+- **Build**: none for dev. `prepublishOnly` bundles `dist/human-format.js` (browserify + uglify) for unpkg.
+- **Test**: `npm test` (about 1s, no network or I/O). Single test: `npx tap --no-check-coverage --grep=<top-level describe regex> index.spec.js`. Watch mode: `npm run dev-test`.
+- **Lint/format**: `npx eslint .` and `npx prettier --write <files>`. Nothing type-checks `index.d.ts`.
+
+## Code conventions
+
+- **Compatibility**: ES5 syntax only (`var`, `function`, no arrow functions, classes or template literals). ESLint enforces it with `ecmaVersion: 5`. The code must keep working in browsers via the UMD wrapper and on Node ≥4 (`engines`).
+- **Tests**: tap's mocha interface (`describe`/`it` + `assert`) in `index.spec.js`. Every behavior change needs a case there. Parse/format round trips go in the shared `data` table.
+- **Public API**: any change to options or exports updates `index.d.ts` and `README.md` in the same commit.
+
+## Pitfalls
+
+- `npx tap` without `--no-check-coverage` fails on tap's 100% coverage threshold. Use `npm test`.
+- `npm test` is `tap … && true` so that lint-staged's appended file paths end up as arguments to `true`, and the full suite runs on every commit. Don't "simplify" it.
+- Tests leave `.nyc_output/` behind (git-ignored). `npx prettier --check .` reports it as unformatted.
+
+## Git workflow
+
+- **Message format**: Conventional Commits with an optional scope, e.g. `feat(types): …`, `chore(README): …`, `chore: update dev deps`. Release commits are the bare version, created by `npm version`.
+- **Branching**: maintainers push chores directly to `master`. External contributions come in as PRs and are squash-merged (`… (#54)`).
+- **Ask first**: `npm version` and `npm publish`.
+
+## Development workflow
+
+- Changelog: `CHANGELOG.md` under `## [Unreleased]` in [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format, in the same commit as the code.
+- Git hook: `pre-commit` runs lint-staged, which runs the full test suite plus prettier and eslint on staged files. `npm ci` reinstalls it.
