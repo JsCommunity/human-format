@@ -71,10 +71,10 @@ declare module "human-format" {
         initExp?: number
       ): Scale<TPrefix>;
       findPrefix(value: number): { factor: number; prefix: TPrefix };
-      parse<TScale extends ScaleLike>(
+      parse(
         str: string,
         strict?: boolean
-      ): ParsedInfo<TScale>;
+      ): ParsedInfo<Scale<TPrefix>> | undefined;
     }
 
     export function bytes<TScale extends ScaleLike = "binary">(

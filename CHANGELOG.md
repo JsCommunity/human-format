@@ -15,4 +15,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `parse()` accepts an incorrectly cased prefix whose lowercase form is a prefix itself, e.g. `100K` ([#31](https://github.com/JsCommunity/human-format/issues/31)).
 - Types: `index.d.ts` no longer fails to compile without `skipLibCheck` (`export =` mixed with other exports).
 - Types: without `scale`, prefixes are checked against the SI scale (binary for `bytes()`) instead of accepting any string.
+- Types: `Scale#parse()` returns the scale's prefixes, or `undefined` when the string does not match.
 - Types: `parse.raw()` takes an options object, like at runtime, instead of a `strict` boolean.

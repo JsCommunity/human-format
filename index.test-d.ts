@@ -37,3 +37,9 @@ expectType<string>(humanFormat(1337, { scale, prefix: "ki" }));
 expectError(humanFormat(1337, { scale, prefix: "Ki" }));
 expectType<"" | "ki" | "Mi">(humanFormat.raw(1337, { scale }).prefix);
 expectType<"" | "ki" | "Mi">(scale.findPrefix(1337).prefix);
+
+const parsed = scale.parse("1 ki");
+expectType<humanFormat.ParsedInfo<typeof scale> | undefined>(parsed);
+if (parsed !== undefined) {
+  expectType<"" | "ki" | "Mi">(parsed.prefix);
+}
