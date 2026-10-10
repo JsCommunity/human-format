@@ -94,11 +94,12 @@
       });
     });
 
-    // Adds lower cased prefixes for case insensitive fallback.
+    // Adds lower cased prefixes for case insensitive fallback, except when
+    // ambiguous (e.g. M and m).
     var lcPrefixes = (this._lcPrefixes = {});
     forOwn(prefixes, function (factor, prefix) {
       var lcPrefix = prefix.toLowerCase();
-      if (!has(prefixes, lcPrefix)) {
+      if (lcPrefix === prefix || !has(prefixes, lcPrefix)) {
         lcPrefixes[lcPrefix] = prefix;
       }
     });

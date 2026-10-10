@@ -194,6 +194,8 @@ describe("humanFormat.parse()", function () {
 
   it("handles incorrect case as gracefully as possible", function () {
     assert.strictEqual(parse("1g"), 1e9);
+    assert.strictEqual(parse("100K"), 1e5);
+    assert.strictEqual(parse("1 KI", { scale: "binary" }), 1024);
   });
 
   it("rejects incorrect case in strict mode", function () {
