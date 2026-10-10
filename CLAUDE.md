@@ -31,3 +31,4 @@
 
 - Changelog: `CHANGELOG.md` under `## [Unreleased]` in [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format, in the same commit as the code.
 - Git hook: `pre-commit` runs lint-staged, which runs the full test suite plus prettier and eslint on staged files. `npm ci` reinstalls it.
+- CI: GitHub Actions (`.github/workflows/ci.yml`) runs `npm test` and `npx eslint .` on Node 22 and 24 for pushes to `master` and PRs.
