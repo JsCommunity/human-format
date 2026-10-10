@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Options set to `undefined` use their default, e.g. `{ unit: undefined }` gave `1 undefined`. `{ maxDecimals: undefined }` now rounds to 2 decimals instead of disabling rounding.
 - `maxDecimals: "auto"` rounds once, e.g. `123456789` gives `123 M` instead of `124 M`.
+- Infinities are formatted without prefix, e.g. `Infinity` instead of `Infinity Y`.
 - Formatting throws for negative numbers given as strings (`"-5"`), like for any other string.
 
 ## [1.3.0] - 2026-10-10

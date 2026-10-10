@@ -329,6 +329,13 @@
         prefix: "",
       };
     }
+    // Neither do infinities, no prefix is large enough.
+    if (!isFinite(value)) {
+      return {
+        value: value,
+        prefix: "",
+      };
+    }
 
     var negative = value < 0;
     if (negative) {

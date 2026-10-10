@@ -98,6 +98,15 @@ describe("humanFormat()", function () {
     );
   });
 
+  it("formats infinities without prefix", function () {
+    assert.strictEqual(humanFormat(Infinity, { unit: "B" }), "Infinity B");
+    assert.strictEqual(humanFormat(-Infinity, { decimals: 1 }), "-Infinity");
+    assert.deepStrictEqual(humanFormat.raw(Infinity), {
+      value: Infinity,
+      prefix: "",
+    });
+  });
+
   it("can use custom units", function () {
     assert.strictEqual(humanFormat(0, { unit: "g" }), "0 g");
   });
