@@ -1,6 +1,6 @@
 # human-format
 
-[![Build Status](https://img.shields.io/travis/JsCommunity/human-format/master.svg)](http://travis-ci.org/JsCommunity/human-format)
+[![CI](https://github.com/JsCommunity/human-format/actions/workflows/ci.yml/badge.svg)](https://github.com/JsCommunity/human-format/actions/workflows/ci.yml)
 [![Dependency Status](https://david-dm.org/JsCommunity/human-format/status.svg?theme=shields.io)](https://david-dm.org/JsCommunity/human-format)
 [![devDependency Status](https://david-dm.org/JsCommunity/human-format/dev-status.svg?theme=shields.io)](https://david-dm.org/JsCommunity/human-format#info=devDependencies)
 
