@@ -18,22 +18,33 @@ var data = [
   [10, "10", { value: 10, prefix: "" }],
   [1e12, "1 T", { value: 1, prefix: "T" }],
   [1e28, "10000 Y", { value: 10000, prefix: "Y" }],
+  [1024, "1 Ki", { value: 1, prefix: "Ki" }, { scale: "binary" }],
+  [1572864, "1.5 Mi", { value: 1.5, prefix: "Mi" }, { scale: "binary" }],
 ];
 data.forEach(function (datum) {
   var num = datum[0];
   if (num !== 0) {
     var raw = datum[2];
-    data.push([-num, "-" + datum[1], { __proto__: raw, value: -raw.value }]);
+    data.push([
+      -num,
+      "-" + datum[1],
+      { __proto__: raw, value: -raw.value },
+      datum[3],
+    ]);
   }
 });
 
-function assertCloseTo(actual, expected, digit) {
-  assert(Math.abs(expected - actual) < Math.pow(10, -(digit || 2)) / 2);
+// relative tolerance, so that tiny and huge numbers are checked too
+function assertCloseTo(actual, expected) {
+  assert(
+    Math.abs(expected - actual) <= 1e-9 * Math.abs(expected),
+    actual + " is not close to " + expected
+  );
 }
 
 function compareRaw(actual, expected) {
   assert.strictEqual(typeof actual, "object");
-  assertCloseTo(actual.value, expected.value, 3);
+  assertCloseTo(actual.value, expected.value);
   assert.strictEqual(actual.prefix, expected.prefix);
   assert.strictEqual(actual.unit, expected.unit);
 }
@@ -41,7 +52,7 @@ function compareRaw(actual, expected) {
 // ===================================================================
 
 describe("humanFormat()", function () {
-  it("returns throws for an invalid number", function () {
+  it("throws for an invalid number", function () {
     [undefined, null, NaN, true, false, "a string", [], {}].forEach(function (
       value
     ) {
@@ -53,8 +64,8 @@ describe("humanFormat()", function () {
 
   it("should convert number to human readable string", function () {
     data.forEach(function (datum) {
-      assert.strictEqual(humanFormat(datum[0]), datum[1]);
-      compareRaw(humanFormat.raw(datum[0]), datum[2]);
+      assert.strictEqual(humanFormat(datum[0], datum[3]), datum[1]);
+      compareRaw(humanFormat.raw(datum[0], datum[3]), datum[2]);
     });
   });
 
@@ -76,7 +87,7 @@ describe("humanFormat()", function () {
       });
     });
 
-    it("throws of unknown scale", function () {
+    it("throws for an unknown scale", function () {
       assert.throws(
         function () {
           humanFormat(102400, { scale: "foo" });
@@ -98,7 +109,7 @@ describe("humanFormat()", function () {
       });
     });
 
-    it("throws of unknown prefix", function () {
+    it("throws for an unknown prefix", function () {
       assert.throws(
         function () {
           humanFormat(102400, { prefix: "foo" });
@@ -122,7 +133,7 @@ describe("humanFormat()", function () {
       assert.strictEqual(humanFormat(999.9, { maxDecimals: 0 }), "1 k");
     });
 
-    it("with auto ", function () {
+    it("with auto", function () {
       assert.strictEqual(
         humanFormat(1181.1111, { maxDecimals: "auto" }),
         "1.2 k"
@@ -152,17 +163,69 @@ describe("humanFormat()", function () {
   });
 });
 
+describe("humanFormat.bytes()", function () {
+  it("uses the binary scale and the B unit", function () {
+    assert.strictEqual(humanFormat.bytes(0), "0 B");
+    assert.strictEqual(humanFormat.bytes(1024), "1 KiB");
+  });
+
+  it("accepts options", function () {
+    assert.strictEqual(humanFormat.bytes(1536, { maxDecimals: 0 }), "2 KiB");
+    assert.strictEqual(humanFormat.bytes(1000, { scale: "SI" }), "1 kB");
+  });
+});
+
 describe("humanFormat.parse()", function () {
   var parse = humanFormat.parse;
 
   it("should convert human readable string to number", function () {
     data.forEach(function (datum) {
-      assertCloseTo(parse(datum[1]), datum[0], 3);
-      // compareRaw(parse.raw(datum[1]), datum[2])
+      assertCloseTo(parse(datum[1], datum[3]), datum[0]);
+      compareRaw(parse.raw(datum[1], datum[3]), {
+        __proto__: datum[2],
+        unit: "",
+      });
     });
   });
 
-  it("handle as gracefully as possible incorrect case", function () {
+  it("returns the unit", function () {
+    assert.strictEqual(parse.raw("1 kB").unit, "B");
+  });
+
+  it("handles incorrect case as gracefully as possible", function () {
     assert.strictEqual(parse("1g"), 1e9);
+  });
+
+  it("rejects incorrect case in strict mode", function () {
+    assert.throws(
+      function () {
+        parse("1g", { strict: true });
+      },
+      { message: "cannot parse str" }
+    );
+  });
+
+  it("throws for a non-string", function () {
+    assert.throws(function () {
+      parse(1);
+    }, TypeError);
+  });
+
+  it("throws for an unknown scale", function () {
+    assert.throws(
+      function () {
+        parse("1", { scale: "foo" });
+      },
+      { message: "missing scale" }
+    );
+  });
+
+  it("throws for an unparsable string", function () {
+    assert.throws(
+      function () {
+        parse("foo");
+      },
+      { message: "cannot parse str" }
+    );
   });
 });
