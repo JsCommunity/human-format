@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-10-10
+
 ### Added
 
 - `parse.bytes()` parses byte sizes with SI (`kB` = 1000) or binary (`KiB` = 1024) prefixes in any case, e.g. `10mb`, and rejects other units.
