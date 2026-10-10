@@ -145,6 +145,13 @@ humanFormat.parse("1 km", { unit: "m" });
 humanFormat.parse("5 apples", { unit: "B" });
 // throws Error: cannot parse str
 
+// Byte sizes: SI (kB = 1000) and binary (KiB = 1024) prefixes, any case, B
+// optional, other units rejected. Bits are not supported.
+humanFormat.parse.bytes("1.5 KiB");
+// => 1536
+humanFormat.parse.bytes("10mb");
+// => 10000000
+
 // Strict mode rejects incorrectly cased prefixes.
 humanFormat.parse("1 g", { strict: true });
 // throws Error: cannot parse str
@@ -161,16 +168,16 @@ humanFormat.parse.raw("1.34 kB");
 
 ### Options
 
-| Option        | Default                           | Description                                                                    |
-| ------------- | --------------------------------- | ------------------------------------------------------------------------------ |
-| `maxDecimals` | `2` (none for `raw()`)            | Maximum number of decimals, or `"auto"`                                        |
-| `decimals`    |                                   | Fixed number of decimals, overrides `maxDecimals`                              |
-| `rounding`    | `"round"`                         | `"round"`, `"floor"` or `"ceil"`                                               |
-| `separator`   | `" "`                             | Between the value and the prefix+unit                                          |
-| `unit`        | `""` (`"B"` for `bytes()`)        | Appended when formatting; when parsing, optional but no other unit is accepted |
-| `scale`       | `"SI"` (`"binary"` for `bytes()`) | `"SI"`, `"binary"` or a `Scale`                                                |
-| `prefix`      |                                   | Forces this prefix when formatting                                             |
-| `strict`      | `false`                           | When parsing, rejects incorrectly cased prefixes                               |
+| Option        | Default                                                     | Description                                                                     |
+| ------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `maxDecimals` | `2` (none for `raw()`)                                      | Maximum number of decimals, or `"auto"`                                         |
+| `decimals`    |                                                             | Fixed number of decimals, overrides `maxDecimals`                               |
+| `rounding`    | `"round"`                                                   | `"round"`, `"floor"` or `"ceil"`                                                |
+| `separator`   | `" "`                                                       | Between the value and the prefix+unit                                           |
+| `unit`        | `""` (`"B"` for `bytes()` and `parse.bytes()`)              | Appended when formatting; when parsing, optional but no other unit is accepted  |
+| `scale`       | `"SI"` (`"binary"` for `bytes()`, both for `parse.bytes()`) | `"SI"`, `"binary"` or a `Scale`                                                 |
+| `prefix`      |                                                             | Forces this prefix when formatting                                              |
+| `strict`      | `false`                                                     | When parsing, rejects incorrectly cased prefixes (and unit for `parse.bytes()`) |
 
 Errors:
 

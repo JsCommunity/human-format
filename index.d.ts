@@ -93,6 +93,11 @@ declare module "human-format" {
     ): number;
 
     export namespace parse {
+      function bytes<TScale extends ScaleLike = "binary">(
+        str: string,
+        options?: Options<TScale>
+      ): number;
+
       function raw<TScale extends ScaleLike = "SI">(
         str: string,
         options?: Options<TScale>

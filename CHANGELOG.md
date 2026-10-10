@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- `parse.bytes()` parses byte sizes with SI (`kB` = 1000) or binary (`KiB` = 1024) prefixes in any case, e.g. `10mb`, and rejects other units.
 - SI prefixes adopted in 2022: `R` (ronna, 10²⁷), `Q` (quetta, 10³⁰), `r` (ronto, 10⁻²⁷) and `q` (quecto, 10⁻³⁰), e.g. `1e30` gives `1 Q` instead of `1000000 Y`.
 
 ### Changed

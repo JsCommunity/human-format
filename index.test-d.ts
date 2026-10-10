@@ -29,6 +29,8 @@ expectType<humanFormat.SIPrefix>(humanFormat.raw(1337).prefix);
 expectType<number>(humanFormat.parse("1.34 kB"));
 expectType<number>(humanFormat.parse("1 Ki", { scale: "binary" }));
 expectType<number>(humanFormat.parse.raw("1.34 kB").factor);
+expectType<number>(humanFormat.parse.bytes("1.5 KiB"));
+expectType<number>(humanFormat.parse.bytes("1 kb", { strict: true }));
 expectType<humanFormat.BinaryPrefix>(
   humanFormat.parse.raw("1 Ki", { scale: "binary" }).prefix
 );

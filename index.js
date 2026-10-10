@@ -191,6 +191,16 @@
     ),
   };
 
+  // Prefixes below 1 make no sense for bytes and m would clash with M.
+  var bytesPrefixes = assign({}, scales.binary._prefixes);
+  var siPrefixes = scales.SI._prefixes;
+  for (var siPrefix in siPrefixes) {
+    if (siPrefixes[siPrefix] >= 1) {
+      bytesPrefixes[siPrefix] = siPrefixes[siPrefix];
+    }
+  }
+  var bytesScale = new Scale(bytesPrefixes);
+
   var defaults = {
     // Decimal digits for formatting.
     maxDecimals: 2,
@@ -243,8 +253,24 @@
   }
 
   function humanFormat$parse(str, opts) {
-    var info = humanFormat$parse$raw(str, opts);
+    return parsedValue(humanFormat$parse$raw(str, opts));
+  }
 
+  var humanFormat$parse$bytes$opts = { scale: bytesScale, unit: "B" };
+  function humanFormat$parse$bytes(str, opts) {
+    return parsedValue(
+      rawParse(
+        str,
+        opts === undefined
+          ? humanFormat$parse$bytes$opts
+          : assign({}, humanFormat$parse$bytes$opts, opts),
+        // b for B, as in 10mb, since bits are not supported
+        true
+      )
+    );
+  }
+
+  function parsedValue(info) {
     // 8.3 * 1e6 is 8300000.000000001 but 83 * 1e6 / 10 is exact: when the
     // digits times the factor is an exact integer, only the division rounds
     var decimals = String(info.value).split(".")[1];
@@ -259,6 +285,10 @@
   }
 
   function humanFormat$parse$raw(str, opts) {
+    return rawParse(str, opts, false);
+  }
+
+  function rawParse(str, opts, ignoreUnitCase) {
     if (typeof str !== "string") {
       throw new TypeError("str must be a string");
     }
@@ -274,17 +304,25 @@
 
     // The unit, if specified, is optional but nothing else is accepted. It is
     // removed first, otherwise "1 m" with unit "m" would be parsed as milli.
+    var strict = getOption(opts, rawDefaults, "strict");
     var unit = getOption(opts, rawDefaults, "unit");
     if (unit !== undefined) {
       str = str.trim();
-      if (unit !== "" && str.slice(-unit.length) === unit) {
+      var end = str.slice(-unit.length);
+      if (
+        unit !== "" &&
+        (end === unit ||
+          (ignoreUnitCase &&
+            !strict &&
+            end.toLowerCase() === unit.toLowerCase()))
+      ) {
         str = str.slice(0, -unit.length);
       } else {
         unit = "";
       }
     }
 
-    var info = scale.parse(str, getOption(opts, rawDefaults, "strict"));
+    var info = scale.parse(str, strict);
     if (info === undefined || (unit !== undefined && info.unit !== "")) {
       throw new Error("cannot parse str");
     }
@@ -414,6 +452,7 @@
 
   humanFormat.bytes = humanFormat$bytes;
   humanFormat.parse = humanFormat$parse;
+  humanFormat$parse.bytes = humanFormat$parse$bytes;
   humanFormat$parse.raw = humanFormat$parse$raw;
   humanFormat.raw = humanFormat$raw;
   humanFormat.Scale = Scale;

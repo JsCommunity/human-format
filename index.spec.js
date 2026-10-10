@@ -374,3 +374,57 @@ describe("humanFormat.parse()", function () {
     );
   });
 });
+
+describe("humanFormat.parse.bytes()", function () {
+  var parseBytes = humanFormat.parse.bytes;
+
+  it("accepts SI and binary prefixes", function () {
+    assert.strictEqual(parseBytes("100"), 100);
+    assert.strictEqual(parseBytes("1.5 kB"), 1500);
+    assert.strictEqual(parseBytes("1.5 KiB"), 1536);
+    assert.strictEqual(parseBytes("1 GiB"), 1073741824);
+    assert.strictEqual(parseBytes("512 K"), 512000);
+    assert.strictEqual(parseBytes("1 QB"), 1e30);
+  });
+
+  it("parses what bytes() formats", function () {
+    [0, 1, 1536, 1073741824].forEach(function (value) {
+      assert.strictEqual(parseBytes(humanFormat.bytes(value)), value);
+    });
+    [0, 1, 1500, 2e9].forEach(function (value) {
+      assert.strictEqual(
+        parseBytes(humanFormat.bytes(value, { scale: "SI" })),
+        value
+      );
+    });
+  });
+
+  it("ignores case", function () {
+    assert.strictEqual(parseBytes("1 KB"), 1000);
+    assert.strictEqual(parseBytes("1 kib"), 1024);
+    assert.strictEqual(parseBytes("10mb"), 10000000);
+  });
+
+  it("respects strict mode", function () {
+    assert.strictEqual(parseBytes("1 kB", { strict: true }), 1000);
+    ["1 kb", "1 KB"].forEach(function (str) {
+      assert.throws(
+        function () {
+          parseBytes(str, { strict: true });
+        },
+        { message: "cannot parse str" }
+      );
+    });
+  });
+
+  it("rejects other units", function () {
+    ["5 apples", "1 rpm", "1 kg"].forEach(function (str) {
+      assert.throws(
+        function () {
+          parseBytes(str);
+        },
+        { message: "cannot parse str" }
+      );
+    });
+  });
+});
