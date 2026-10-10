@@ -20,7 +20,7 @@
   "bugs": "https://github.com/JsCommunity/human-format/issues",
   "repository": {
     "type": "git",
-    "url": "http://github.com/JsCommunity/human-format"
+    "url": "git+https://github.com/JsCommunity/human-format.git"
   },
   "author": {
     "name": "Julien Fontanet",
