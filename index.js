@@ -112,9 +112,9 @@
 
     escapedPrefixes.sort(compareLongestFirst);
     this._regexp = new RegExp(
-      "^\\s*(-)?\\s*(\\d+(?:\\.\\d+)?)\\s*(" +
+      "^\\s*(-)?\\s*(\\d+(?:\\.\\d+)?(?:e[+-]?\\d+)?)\\s*(" +
         escapedPrefixes.join("|") +
-        ")\\s*(.*)\\s*?$",
+        ")\\s*(\\D*?)\\s*$",
       "i"
     );
   }
@@ -276,15 +276,27 @@
       throw new Error("missing scale");
     }
 
-    // TODO: the unit should be checked: it might be absent but it
-    // should not differ from the one expected.
-    //
     // TODO: if multiple units are specified, at least must match and
     // the returned value should be: { value: <value>, unit: matchedUnit }
 
+    // The unit, if specified, is optional but nothing else is accepted. It is
+    // removed first, otherwise "1 m" with unit "m" would be parsed as milli.
+    var unit = opts.unit;
+    if (unit !== undefined) {
+      str = str.trim();
+      if (unit !== "" && str.slice(-unit.length) === unit) {
+        str = str.slice(0, -unit.length);
+      } else {
+        unit = "";
+      }
+    }
+
     var info = scale.parse(str, opts.strict);
-    if (info === undefined) {
+    if (info === undefined || (unit !== undefined && info.unit !== "")) {
       throw new Error("cannot parse str");
+    }
+    if (unit !== undefined) {
+      info.unit = unit;
     }
 
     return info;

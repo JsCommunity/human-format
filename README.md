@@ -116,6 +116,16 @@ humanFormat.parse("1.34 KiB", { scale: "binary" });
 humanFormat.parse("1 g");
 // => 1000000000
 
+// Exponent notation is supported.
+humanFormat.parse("1.5e3 k");
+// => 1500000
+
+// If a unit is specified, it is optional but no other unit is accepted.
+humanFormat.parse("1 km", { unit: "m" });
+// => 1000
+humanFormat.parse("5 apples", { unit: "B" });
+// throws Error: cannot parse str
+
 // Strict mode rejects incorrectly cased prefixes.
 humanFormat.parse("1 g", { strict: true });
 // throws Error: cannot parse str

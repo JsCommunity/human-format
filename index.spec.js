@@ -201,6 +201,41 @@ describe("humanFormat.parse()", function () {
     assert.strictEqual(parse("0.00000015"), 1.5e-7);
   });
 
+  it("accepts exponent notation", function () {
+    assert.strictEqual(parse("1e3"), 1000);
+    assert.strictEqual(parse("1.5E-7"), 1.5e-7);
+    assert.strictEqual(parse("1e3k"), 1e6);
+    assert.strictEqual(parse("2e"), 2e18);
+  });
+
+  it("rejects digits after the prefix", function () {
+    ["1k5", "1.5.3"].forEach(function (str) {
+      assert.throws(
+        function () {
+          parse(str);
+        },
+        { message: "cannot parse str" }
+      );
+    });
+  });
+
+  it("checks the unit if specified", function () {
+    assert.strictEqual(parse("1 km", { unit: "m" }), 1000);
+    assert.strictEqual(parse("1 m ", { unit: "m" }), 1);
+    assert.strictEqual(parse("1 mm", { unit: "m" }), 0.001);
+    assert.strictEqual(parse("1 k", { unit: "m" }), 1000);
+    assert.strictEqual(parse.raw("1 kB", { unit: "B" }).unit, "B");
+    assert.strictEqual(parse.raw("1 k", { unit: "B" }).unit, "");
+    ["5 apples", "1 kg"].forEach(function (str) {
+      assert.throws(
+        function () {
+          parse(str, { unit: "B" });
+        },
+        { message: "cannot parse str" }
+      );
+    });
+  });
+
   it("returns the unit", function () {
     assert.strictEqual(parse.raw("1 kB").unit, "B");
   });
