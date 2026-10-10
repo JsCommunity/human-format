@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-10-10
+
 ### Added
 
 - `rounding` option: `"round"` (default), `"floor"` or `"ceil"`, e.g. to never display a value above the input ([#46](https://github.com/JsCommunity/human-format/issues/46)).

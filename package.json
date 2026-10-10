@@ -1,6 +1,6 @@
 {
   "name": "human-format",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "license": "ISC",
   "description": "Converts a number to/from a human readable string: `1337` ↔ `1.34kB`",
   "keywords": [
