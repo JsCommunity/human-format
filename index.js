@@ -304,6 +304,12 @@
   };
   var oppositeRoundings = { ceil: "floor", floor: "ceil" };
 
+  // 1 decimal below 10, none above, decided before rounding so that it
+  // happens only once
+  function autoPower(value, factor) {
+    return value < 10 * factor ? 10 : 1;
+  }
+
   function humanFormat$raw(value, opts) {
     return rawFormat(value, opts, getOption(opts, rawDefaults, "maxDecimals"));
   }
@@ -347,9 +353,7 @@
 
     var power;
     var autoMaxDecimals = maxDecimals === "auto";
-    if (autoMaxDecimals) {
-      power = 10;
-    } else if (maxDecimals !== undefined) {
+    if (maxDecimals !== undefined && !autoMaxDecimals) {
       power = Math.pow(10, maxDecimals);
     }
 
@@ -363,9 +367,12 @@
       factor = scale._prefixes[prefix];
     } else {
       var _ref = scale.findPrefix(value);
-      if (power !== undefined) {
+      if (maxDecimals !== undefined) {
         do {
           factor = _ref.factor;
+          if (autoMaxDecimals) {
+            power = autoPower(value, factor);
+          }
 
           // factor is usually >> power, therefore it's better to
           // divide factor by power than the other way to limit
@@ -380,14 +387,13 @@
 
       prefix = _ref.prefix;
     }
+    if (autoMaxDecimals) {
+      power = autoPower(value, factor);
+    }
     value =
       power === undefined
         ? value / factor
         : round((value * power) / factor) / power;
-
-    if (autoMaxDecimals && Math.abs(value) >= 10) {
-      value = round(value);
-    }
 
     return {
       prefix: prefix,

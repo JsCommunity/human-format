@@ -174,6 +174,16 @@ describe("humanFormat()", function () {
       assert.strictEqual(humanFormat(1.0, { maxDecimals: "auto" }), "1");
       assert.strictEqual(humanFormat(-5.36, { maxDecimals: "auto" }), "-5.4");
       assert.strictEqual(humanFormat(-15.36, { maxDecimals: "auto" }), "-15");
+      // rounded once, not to 1 decimal first (123.5) then to 0 (124)
+      assert.strictEqual(
+        humanFormat(123456789, { maxDecimals: "auto" }),
+        "123 M"
+      );
+      assert.strictEqual(humanFormat(9.96, { maxDecimals: "auto" }), "10");
+      assert.strictEqual(
+        humanFormat(15.36, { maxDecimals: "auto", prefix: "" }),
+        "15"
+      );
     });
   });
 
