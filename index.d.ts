@@ -42,6 +42,7 @@ declare module "human-format" {
 
     export interface Options<TScale extends ScaleLike> {
       maxDecimals?: number | "auto";
+      rounding?: "round" | "floor" | "ceil";
       separator?: string;
       unit?: string;
       scale?: TScale;

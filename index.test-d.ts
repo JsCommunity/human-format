@@ -7,6 +7,8 @@ expectType<string>(humanFormat(1337, { maxDecimals: "auto", unit: "B" }));
 expectType<string>(humanFormat(1337, { scale: "binary", prefix: "Ki" }));
 expectError(humanFormat("1337"));
 expectError(humanFormat(1337, { maxDecimals: "foo" }));
+expectType<string>(humanFormat(1337, { rounding: "floor" }));
+expectError(humanFormat(1337, { rounding: "trunc" }));
 expectError(humanFormat(1337, { scale: "foo" }));
 expectError(humanFormat(1337, { prefix: "Ki" }));
 expectError(humanFormat(1337, { scale: "binary", prefix: "k" }));

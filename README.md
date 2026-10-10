@@ -55,6 +55,14 @@ humanFormat(13337, {
 });
 //=> '13 k'
 
+// Values are rounded to the nearest by default, but can be rounded down (floor)
+// or up (ceil) instead.
+humanFormat(1390, {
+  maxDecimals: 1,
+  rounding: "floor",
+});
+//=> '1.3 k'
+
 // A fixed number of decimals can be set.
 humanFormat(1337, {
   decimals: 4,

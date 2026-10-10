@@ -164,6 +164,47 @@ describe("humanFormat()", function () {
     });
   });
 
+  describe("with rounding opt", function () {
+    it("can round down", function () {
+      var opts = { maxDecimals: "auto", rounding: "floor" };
+      assert.strictEqual(humanFormat(1390, opts), "1.3 k");
+      assert.strictEqual(humanFormat(13999, opts), "13 k");
+      assert.strictEqual(humanFormat(-1310, opts), "-1.4 k");
+      assert.strictEqual(
+        humanFormat(999999, { rounding: "floor" }),
+        "999.99 k"
+      );
+      assert.strictEqual(
+        humanFormat(1999, { decimals: 1, rounding: "floor" }),
+        "1.9 k"
+      );
+    });
+
+    it("can round up", function () {
+      var opts = { maxDecimals: 1, rounding: "ceil" };
+      assert.strictEqual(humanFormat(1310, opts), "1.4 k");
+      assert.strictEqual(humanFormat(-1390, opts), "-1.3 k");
+      assert.strictEqual(
+        humanFormat(999001, { maxDecimals: 0, rounding: "ceil" }),
+        "1 M"
+      );
+    });
+
+    it("ignores floating point errors", function () {
+      assert.strictEqual(humanFormat(4.35, { rounding: "floor" }), "4.35");
+      assert.strictEqual(humanFormat(4.35, { rounding: "ceil" }), "4.35");
+    });
+
+    it("throws for an unknown rounding", function () {
+      assert.throws(
+        function () {
+          humanFormat(1, { rounding: "foo" });
+        },
+        { message: "invalid rounding" }
+      );
+    });
+  });
+
   describe("with decimals opt", function () {
     it("forces a fixed number of decimals", function () {
       assert.strictEqual(humanFormat(1, { decimals: 2 }), "1.00");

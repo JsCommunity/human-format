@@ -212,6 +212,9 @@
     unit: "",
   };
   var rawDefaults = {
+    // How to round to maxDecimals: round, floor or ceil.
+    rounding: "round",
+
     scale: "SI",
 
     // Strict mode prevents parsing of incorrectly cased prefixes.
@@ -302,6 +305,19 @@
     return info;
   }
 
+  // toPrecision(15) removes floating point errors (4.35 * 100 is
+  // 434.99999999999994) which Math.round ignores but floor and ceil do not
+  var roundings = {
+    ceil: function (value) {
+      return Math.ceil(+value.toPrecision(15));
+    },
+    floor: function (value) {
+      return Math.floor(+value.toPrecision(15));
+    },
+    round: Math.round,
+  };
+  var oppositeRoundings = { ceil: "floor", floor: "ceil" };
+
   function humanFormat$raw(value, opts) {
     // Zero is a special case, it never has any prefix.
     if (value === 0) {
@@ -310,7 +326,14 @@
         prefix: "",
       };
     } else if (value < 0) {
-      var result = humanFormat$raw(-value, opts);
+      // floor and ceil apply to the signed value
+      var rounding = opts != null && opts.rounding;
+      var result = humanFormat$raw(
+        -value,
+        has(oppositeRoundings, rounding)
+          ? assign({}, opts, { rounding: oppositeRoundings[rounding] })
+          : opts
+      );
       result.value = -result.value;
       return result;
     }
@@ -328,6 +351,11 @@
     if (scale === undefined) {
       throw new Error("missing scale");
     }
+
+    if (!has(roundings, opts.rounding)) {
+      throw new Error("invalid rounding");
+    }
+    var round = roundings[opts.rounding];
 
     var power;
     var maxDecimals = opts.maxDecimals;
@@ -357,7 +385,7 @@
           // numerical error
           var r = factor / power;
 
-          value = Math.round(value / r) * r;
+          value = round(value / r) * r;
         } while ((_ref = scale.findPrefix(value)).factor !== factor);
       } else {
         factor = _ref.factor;
@@ -368,10 +396,10 @@
     value =
       power === undefined
         ? value / factor
-        : Math.round((value * power) / factor) / power;
+        : round((value * power) / factor) / power;
 
     if (autoMaxDecimals && Math.abs(value) >= 10) {
-      value = Math.round(value);
+      value = round(value);
     }
 
     return {
